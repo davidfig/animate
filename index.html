@@ -41,7 +41,10 @@
         green.position.set(300,300);
         var blue = triangle(50, 0x0000ff);
         blue.position.set(500,100);
-
+        var sprite = PIXI.Sprite.fromImage('circle.png');
+        stage.addChild(sprite);
+        sprite.tint = 0x0000ff;
+        sprite.position.set(200, 200);
         function update()
         {
             renderer.render(stage);
@@ -52,6 +55,8 @@
         Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000, {repeat: true, reverse: true}, Easing.easeInOutSine);
         Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500, {reverse: true, repeat: true}, Easing.easeInSine);
         Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
+        Animate.tint(sprite, 0xff0000, 2000, {repeat: true, reverse: true});
+
         Update.update();
 
     </script>

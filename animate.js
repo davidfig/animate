@@ -68,7 +68,10 @@ function to(object, to, duration, options, ease)
                     object[keys[i]] = ease(time, start[i], delta[i], duration);
                 }
             }
-
+            if (options.each)
+            {
+                options.each(elapsed, object);
+            }
             // check if we're done
             if (time === duration)
             {
@@ -146,6 +149,29 @@ function to(object, to, duration, options, ease)
     return options;
 }
 
+function tint(object, tint, duration, options, ease)
+{
+    object.tint = object.tint || 0xffffff;
+    var r = object.tint >> 16;
+    var g = object.tint >> 8 & 0x0000ff;
+    var b = object.tint & 0x0000ff;
+    var colorFrom = {r: r, g: g, b: b};
+
+    r = tint >> 16;
+    g = tint >> 8 & 0x0000ff;
+    b = tint & 0x0000ff;
+    var colorTo = {r: r, g: g, b: b};
+
+    function each(elapsed, current)
+    {
+        object.tint = current.r << 16 | current.g << 8 | current.b;
+    }
+
+    options = options || {};
+    options.each = each;
+
+    to(colorFrom, colorTo, duration, options, ease);
+}
 
 // options for animate functions:
 //
@@ -1093,9 +1119,9 @@ function update(elapsed)
 var Animate = {
     init: init,
     to: to,
+    tint: tint,
     // remove: remove,
     // fadeMusic: fadeMusic
-    update: update
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
