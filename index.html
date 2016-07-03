@@ -1,0 +1,45 @@
+<head>
+    <script src="https://rawgit.com/pixijs/pixi.js/dev/bin/pixi.js"></script>
+    <script src="easing.js"></script>
+    <script src="animate.js"></script>
+    <script src="../update/update.js"></script>
+    <script src="../debug/debug.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        Debug.init();
+        Update.init();
+        Animate.init();
+
+        var renderer = new PIXI.WebGLRenderer(1000, 1000, {transparent: true});
+        document.body.appendChild(this.renderer.view);
+        var stage = new PIXI.Container();
+        var g = new PIXI.Graphics();
+        stage.addChild(g);
+
+        var size = 100;
+        g.beginFill(0x00ff00);
+        g.moveTo(size / 2, 0);
+        g.lineTo(0, size);
+        g.lineTo(size, size);
+        g.closePath();
+        g.endFill();
+
+        function update()
+        {
+            renderer.render(stage);
+        }
+        Update.add(update, null, null, {percent: 'Render'});
+
+        // Animate.to(g, 'alpha', 0, 3000, null, Easing.easeInOutSine);
+        Animate.to(g, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000, {repeat: 2, reverse: true}, Easing.easeInOutSine);
+        Update.update();
+
+    </script>
+</body>
