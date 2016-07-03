@@ -244,6 +244,7 @@ function to(object, to, duration, options, ease)
     return options;
 }
 
+// tints a pixi.js sprite
 function tint(object, tint, duration, options, ease)
 {
     object.tint = object.tint || 0xffffff;
@@ -260,9 +261,14 @@ function tint(object, tint, duration, options, ease)
     function each(elapsed, current)
     {
         object.tint = current.r << 16 | current.g << 8 | current.b;
+        if (oldEach)
+        {
+            oldEach(elapsed, current);
+        }
     }
 
     options = options || {};
+    var oldEach = options.onEach;
     options.onEach = each;
 
     return to(colorFrom, colorTo, duration, options, ease);
@@ -270,47 +276,26 @@ function tint(object, tint, duration, options, ease)
 
 function shake(object, amount, duration, options, ease)
 {
-    function each()
+    function each(elapsed, object)
     {
         object.x = start.x + Math.floor(Math.random() * amount * 2) - amount;
         object.y = start.y + Math.floor(Math.random() * amount * 2) - amount;
+        if (oldEach)
+        {
+            oldEach(elapsed, object);
+        }
     }
 
     var start = {x: object.x, y: object.y};
-
     options = options || {};
+    var oldEach = options.onEach;
     options.onEach = each;
 
     object.shake = 0;
     return to(object, {shake: 1}, duration, options, ease);
 }
 
-// options for animate functions:
-//
-//    __when finished__
-//    repeat: repeat the animation when completed (does not call finished)
-//    repeatCount: repeats repeatCount number of times
-//    reverse: repeat by reversing to and from
-//
-//    __misc__
-//    renderer: the name of the renderer to set as dirty
-//    createOnly: returns an animate structure without adding it to the YY.Update queue
-//    randomDuration: [min, max] on repeat, change the duration to a random value between min and max
-//    cancel: remove animation if parent === null; checks n = cancel levels of parents
-//    noX: for moveTo, don't change X
-//    noY: for moveTo, don't change Y
-//
-//    __callbacks__
-//    onEach: a function pointer executed after each update (return true to cancel animatino)
-//    onWait: a function pointer executed after each update during a wait
-//    onBefore: a function pointer executed before each update
-//    onFinished: a function pointer executed when completed
-//    onFirst: a function pointer executed on first update
-//    onReverse: called during reverse
-
 /*
-
-
 // zoom a YY.Viewport to (zoomX, zoomY)
 viewportZoom: function(viewport, zoomX, zoomY, duration, wait, options, ease) {
     object = makeArray(viewport);
@@ -394,84 +379,7 @@ moveAngle: function(object, angle, speed, duration, wait, options)
 ////// UPDATE FUNCTIONS //////
 //////////////////////////////
 
-moveAngleUpdate: function(elapsed, item, list)
-{
-    item.time += elapsed;
-    if (item.time > item.duration)
-    {
-        if (item.options.reverse)
-        {
-            var swap = item.start;
-            item.start = item.to;
-            item.to = swap;
-            if (item.options.repeatCount)
-            {
-                item.options.repeatCount--;
-            }
-            else if (!item.options.repeat)
-            {
-                item.options.reverse = false;
-            }
-            if (item.options.onreverse)
-            {
-                item.options.onreverse(elapsed, item, list);
-            }
-            return false;
-        }
-        return true;
-    }
-    var first = list[0];
-    first.x += item.speed * item.cos * elapsed;
-    first.y += item.speed * item.sin * elapsed;
-},
 
-moveToTargetUpdate: function(elapsed, item, list)
-{
-    var i = 0;
-    var first = list[0];
-    var angle = YY.Misc.angleTwoPoints(first.position, item.to);
-    if (angle !== item.last)
-    {
-        item.last = angle;
-        item.sin = Math.sin(angle);
-        item.cos = Math.cos(angle);
-    }
-    var xBeforeDelta = first.x - item.to.x < 0;
-    var yBeforeDelta = first.y - item.to.y < 0;
-    first.x += item.cos * item.speed;
-    first.y += item.sin * item.speed;
-    if (xBeforeDelta !== (first.x - item.to.x < 0))
-    {
-        first.x = item.to.x;
-    }
-    if (yBeforeDelta !== (first.y - item.to.y < 0))
-    {
-        first.y = item.to.y;
-    }
-    if (first.x === item.to.x && first.y === item.to.y)
-    {
-        if (item.options.reverse)
-        {
-            var swap = item.start;
-            item.start = item.to;
-            item.to = swap;
-            if (item.options.repeatCount)
-            {
-                item.options.repeatCount--;
-            }
-            else if (!item.options.repeat)
-            {
-                item.options.reverse = false;
-            }
-            if (item.options.onreverse)
-            {
-                item.options.onreverse(elapsed, item, list);
-            }
-            return false;
-        }
-        return true;
-    }
-},
 
 circularPathUpdate: function(elapsed, item, list)
 {
