@@ -5,10 +5,15 @@
     Copyright (c) 2016 YOPEY YOPEY LLC
 */ (function(){
 
+// animate any numeric parameter
+// options {}
+//      onDone - function pointer for when the animation expires or is cancelled
+//      TODO - suffix: add this to the end of all values (e.g., 'px')
 function to(object, to, duration, options, ease)
 {
     options = options || {};
     ease = ease || Easing.none;
+    var suffix = options.suffix || '';
     var start, delta, keys;
     var i = 0;
     start = [], delta = [], keys = [];
@@ -46,6 +51,12 @@ function to(object, to, duration, options, ease)
             }
             if (options.cancel)
             {
+                if (options.onDone)
+                {
+                    options.onDone(elapsed, object);
+                }
+                object = null;
+                options = null;
                 return true;
             }
             if (options.wait)
@@ -68,9 +79,9 @@ function to(object, to, duration, options, ease)
                     object[keys[i]] = ease(time, start[i], delta[i], duration);
                 }
             }
-            if (options.each)
+            if (options.onEach)
             {
-                options.each(elapsed, object);
+                options.onEach(elapsed, object);
             }
             // check if we're done
             if (time === duration)
@@ -138,6 +149,12 @@ function to(object, to, duration, options, ease)
                 }
                 else
                 {
+                    if (options.onDone)
+                    {
+                        options.onDone(elapsed, object);
+                    }
+                    object = null;
+                    options = null;
                     return true;
                 }
             }
@@ -147,6 +164,24 @@ function to(object, to, duration, options, ease)
         },
     options.wait ? options.wait : 0);
     return options;
+}
+
+// destroys an animation
+function cancel(animate)
+{
+    animate.cancel = true;
+}
+
+// pauses an animation
+function pause(animate)
+{
+    animate.pause = true;
+}
+
+// resumes an animation
+function resume(animate)
+{
+    animate.resume = true;
 }
 
 function tint(object, tint, duration, options, ease)
@@ -168,9 +203,26 @@ function tint(object, tint, duration, options, ease)
     }
 
     options = options || {};
-    options.each = each;
+    options.onEach = each;
 
-    to(colorFrom, colorTo, duration, options, ease);
+    return to(colorFrom, colorTo, duration, options, ease);
+}
+
+function shake(object, amount, duration, options, ease)
+{
+    function each()
+    {
+        object.x = start.x + Math.floor(Math.random() * amount * 2) - amount;
+        object.y = start.y + Math.floor(Math.random() * amount * 2) - amount;
+    }
+
+    var start = {x: object.x, y: object.y};
+
+    options = options || {};
+    options.onEach = each;
+
+    object.shake = 0;
+    return to(object, {shake: 1}, duration, options, ease);
 }
 
 // options for animate functions:
@@ -196,53 +248,7 @@ function tint(object, tint, duration, options, ease)
 //    onFirst: a function pointer executed on first update
 //    onReverse: called during reverse
 
-var list = [];
-var removeQueue = [];
-var panel;
-
-var debugLast;
-
-// initialize for use with davidfig/Update and (optionally) davidfig/Debug
-function init()
-{
-    if (Debug)
-    {
-        panel = Debug.add('animate', {text: '0 animations'});
-    }
-}
 /*
-
-
-// use with howler.js
-function fadeMusic(object, to, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    var start = object[0].gainNode.gain.value;
-    var delta = to - start;
-    return add({call: fadeMusicUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-}
-
-
-// rotate PIXI object in a direction for delta radians
-rotationDirection: function(object, delta, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    var start = object[0].rotation;
-    var to = start + delta;
-    return add({call: rotationDirectionUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
-
-rotationSpeed: function(object, to, durationPerRadian, wait, options, ease)
-{
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    var start = object[0].rotation;
-    var delta = YY.Misc.differenceAngles(to, start);
-    var duration = delta * durationPerRadian;
-    delta *= YY.Misc.differenceAnglesSign(to, start);
-    return add({call: rotationUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
 
 
 // zoom a YY.Viewport to (zoomX, zoomY)
@@ -260,25 +266,6 @@ viewportMove: function(viewport, x, y, duration, wait, options, ease) {
     var start = new PIXI.Point(viewport.center.x, viewport.center.y);
     var delta = new PIXI.Point(x - start.x, y - start.y);
     return add({call: viewportMoveUpdate, object: object, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
-
-tint: function(object, tint, duration, wait, options, ease) {
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    options = options || {};
-    var colorStart;
-    if (options.three)
-    {
-        colorStart = object[0].color.getHex() || new THREE.Color(0xffffff);
-    }
-    else
-    {
-        colorStart = object[0].tint || 0xffffff;
-    }
-    var start = 0;
-    var delta = 1;
-    return add({call: tintUpdate, object: object, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease,
-        color1: colorStart, color2: tint });
 },
 
 movie: function(object, textures, duration, wait, options, ease) {
@@ -1117,11 +1104,12 @@ function update(elapsed)
 
 // exports
 var Animate = {
-    init: init,
     to: to,
+    cancel: cancel,
+    pause: pause,
+    resume: resume,
     tint: tint,
-    // remove: remove,
-    // fadeMusic: fadeMusic
+    shake: shake
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.

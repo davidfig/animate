@@ -15,7 +15,6 @@
     <script>
         Debug.init();
         Update.init();
-        Animate.init();
 
         function triangle(size, color)
         {
@@ -51,12 +50,17 @@
         }
         Update.add(update, null, null, {percent: 'Render'});
 
+        function fade(elapsed, object)
+        {
+            Animate.to(object, {alpha: 0}, 2000);
+        }
+
         // Animate.to(g, 'alpha', 0, 3000, null, Easing.easeInOutSine);
         Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000, {repeat: true, reverse: true}, Easing.easeInOutSine);
-        Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500, {reverse: true, repeat: true}, Easing.easeInSine);
+        Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500, {reverse: true, onDone: fade}, Easing.easeInSine);
         Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
         Animate.tint(sprite, 0xff0000, 2000, {repeat: true, reverse: true});
-
+        Animate.shake(sprite, 5, 0, {repeat: true});
         Update.update();
 
     </script>
