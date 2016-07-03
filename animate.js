@@ -97,7 +97,7 @@ function to(object, to, duration, options, ease)
                     }
                     else
                     {
-                        if (!isNaN(options.repeat))
+                        if (options.repeat !== true)
                         {
                             options.repeat--;
                         }
@@ -106,9 +106,31 @@ function to(object, to, duration, options, ease)
                 else if (options.repeat)
                 {
                     time = 0;
-                    if (!isNaN(options.repeat))
+                    if (options.repeat !== true)
                     {
                         options.repeat--;
+                    }
+                }
+                else if (options.continue)
+                {
+                    for (var i = 0; i < keys.length; i++)
+                    {
+                        if (isNaN(to[keys[i]]))
+                        {
+                            for (var j = 0; j < keys[i].children.length; j++)
+                            {
+                                start[i][j] = object[keys[i].key][keys[i].children[j]];
+                            }
+                        }
+                        else
+                        {
+                            start[i] = object[keys[i]];
+                        }
+                    }
+                    time = 0;
+                    if (options.continue !== true)
+                    {
+                        options.continue--;
                     }
                 }
                 else
@@ -163,60 +185,7 @@ function init()
     }
 }
 /*
-function remove(animate)
-{
-    if (animate)
-    {
-        if (Array.isArray(animate))
-        {
-            while (animate.length)
-            {
-                var entry = animate.pop();
-                entry.pause = true;
-                removeQueue.push(entry);
-            }
-        }
-        else
-        {
-            animate.pause = true;
-            removeQueue.push(animate);
-        }
-    }
-}
 
-function removeQueueItem(animate)
-{
-    for (var i = 0, _i = list.length; i < _i; i++)
-    {
-        if (list[i] === animate)
-        {
-            list.splice(i, 1);
-            return;
-        }
-    }
-}
-
-function removeQueueItems()
-{
-    while (removeQueue.length)
-    {
-        var entry = removeQueue.pop();
-        var index = list.indexOf(entry);
-        if (index !== -1)
-        {
-            list.splice(index, 1);
-        }
-    }
-}
-
-function makeArray(object)
-{
-    if (!Array.isArray(object))
-    {
-        object = [object];
-    }
-    return object;
-}
 
 // use with howler.js
 function fadeMusic(object, to, duration, wait, options, ease)
@@ -227,62 +196,6 @@ function fadeMusic(object, to, duration, wait, options, ease)
     return add({call: fadeMusicUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
 }
 
-function alphaTo(object, to, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    var start = object[0].alpha;
-    var delta = to - start;
-    return add({call: alphaUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-}
-
-function opacityTo(object, to, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    var start = parseFloat(object[0].style.opacity);
-    var delta = to - start;
-    return add({call: opacityUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-}
-
-scaleTo: function(object, to, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    options = options || {};
-    ease = ease || YY.Easing.none;
-    var start, delta;
-    if (isNaN(to))
-    {
-        start = {x: object[0].scale.x, y: object[0].scale.y};
-        delta = {x: to.x - start.x, y: to.y - start.y};
-    }
-    else
-    {
-        start = (options.yOnly) ? object[0].scale.y : object[0].scale.x;
-        delta = to - start;
-    }
-    return add({call: scaleUpdate, object: object, to: to, start: start, delta: delta, wait: wait, time: 0, duration: duration, options: options, ease: ease});
-},
-
-rotationTo: function(object, to, duration, wait, options, ease) {
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    var start = object[0].rotation;
-    var difference = YY.Misc.differenceAngles(to, start);
-    var sign = YY.Misc.differenceAnglesSign(to, start);
-    var delta = difference * sign;
-    return add({call: rotationUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
-
-rotationTo3: function (object, to, duration, wait, options, ease)
-{
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    var start = object[0].rotation.clone();
-    var delta = new THREE.Vector3(
-        YY.Misc.differenceAngles(to.x, start.x) * YY.Misc.differenceAngles(to.x, start.x),
-        YY.Misc.differenceAngles(to.y, start.y) * YY.Misc.differenceAngles(to.y, start.y),
-        YY.Misc.differenceAngles(to.z, start.z) * YY.Misc.differenceAngles(to.z, start.z));
-    return add({call: rotationUpdate3, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
 
 // rotate PIXI object in a direction for delta radians
 rotationDirection: function(object, delta, duration, wait, options, ease)
@@ -305,49 +218,6 @@ rotationSpeed: function(object, to, durationPerRadian, wait, options, ease)
     return add({call: rotationUpdate, object: object, to: to, start: start, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
 },
 
-// move PIXI object at to (x, y)
-moveTo: function(object, x, y, duration, wait, options, ease) {
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    options = options || {};
-    var start;
-    if (options.dom)
-    {
-        var display = object[0].style.display;
-        object[0].style.display = 'block';
-        start = { x: object[0].offsetLeft, y: object[0].offsetTop };
-        object[0].style.display = display;
-    }
-    else
-    {
-        start = new PIXI.Point(object[0].x, object[0].y);
-    }
-    var to = new PIXI.Point(x, y);
-    var delta = new PIXI.Point(x - start.x, y - start.y);
-    return add({call: moveUpdate, object: object, start: start, to: to, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
-
-moveTo3: function(object, x, y, z, duration, wait, options, ease) {
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    options = options || {};
-    options.three = true;
-    var start;
-    start = object[0].position.clone();
-    var to = new THREE.Vector3(x, y, z);
-    var delta = new THREE.Vector3(x - start.x, y - start.y, z - start.z);
-    return add({call: moveUpdate, object: object, start: start, to: to, delta: delta, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
-
-// move PIXI object at a continuous speed
-moveSpeed: function(object, x, y, speed, wait, options, ease) {
-    object = makeArray(object);
-    ease = ease || YY.Easing.none;
-    var start = {x: object[0].position.x, y: object[0].position.y};
-    var delta = new PIXI.Point(x - start.x, y - start.y);
-    var duration = Math.max(Math.abs(delta.x), Math.abs(delta.y)) * speed;
-    return add({call: moveUpdate, object: object, start: start, delta: delta, speed: speed, time: 0, duration: duration, wait: wait, options: options, ease: ease});
-},
 
 // zoom a YY.Viewport to (zoomX, zoomY)
 viewportZoom: function(viewport, zoomX, zoomY, duration, wait, options, ease) {

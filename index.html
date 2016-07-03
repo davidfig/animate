@@ -17,19 +17,30 @@
         Update.init();
         Animate.init();
 
+        function triangle(size, color)
+        {
+            var half = size / 2;
+            var g = new PIXI.Graphics();
+            stage.addChild(g);
+            g.beginFill(color);
+            g.moveTo(0, -half);
+            g.lineTo(-half, half);
+            g.lineTo(half, half);
+            g.closePath();
+            g.endFill();
+            return g;
+        }
+
         var renderer = new PIXI.WebGLRenderer(1000, 1000, {transparent: true});
         document.body.appendChild(this.renderer.view);
         var stage = new PIXI.Container();
-        var g = new PIXI.Graphics();
-        stage.addChild(g);
 
-        var size = 100;
-        g.beginFill(0x00ff00);
-        g.moveTo(size / 2, 0);
-        g.lineTo(0, size);
-        g.lineTo(size, size);
-        g.closePath();
-        g.endFill();
+        var red = triangle(100, 0xff0000);
+        red.position.set(50, 50);
+        var green = triangle(50, 0x00ff00);
+        green.position.set(300,300);
+        var blue = triangle(50, 0x0000ff);
+        blue.position.set(500,100);
 
         function update()
         {
@@ -38,7 +49,9 @@
         Update.add(update, null, null, {percent: 'Render'});
 
         // Animate.to(g, 'alpha', 0, 3000, null, Easing.easeInOutSine);
-        Animate.to(g, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000, {repeat: 2, reverse: true}, Easing.easeInOutSine);
+        Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000, {repeat: true, reverse: true}, Easing.easeInOutSine);
+        Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500, {reverse: true, repeat: true}, Easing.easeInSine);
+        Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
         Update.update();
 
     </script>
