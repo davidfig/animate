@@ -6,182 +6,242 @@
 */ (function(){
 
 // animate any numeric parameter
+// object - object to animate
+// to - parameters to animate, e.g.: {alpha: 5, scale: {x, 5}, rotation: Math.PI}
+// ease - easing function from easing.js (see http://easings.net for examples)
 // options {}
+//
+//      wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
+//
+//      __change active animation__ (assigned through returned options from to())
+//      pause - pause animation
+//      cancel - cancel animation
+//      restart - restart animation with current starting values
+//      original - restart animation with original starting values
+//
+//      __when animation expires__
+//      repeat - true = repeat animation forever; n = repeat animation n times
+//      reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
+//      continue - true = continue animation with new starting values; n = continue animation n times
+//
+//      __callbacks
 //      onDone - function pointer for when the animation expires or is cancelled
-//      TODO - suffix: add this to the end of all values (e.g., 'px')
+//      onFirst - function pointer for first time update is called (does not include pause or wait time)
+//      onEach - function pointer called after each update
+//      onLoop - function pointer called after a revere, repeat, or continue
+//      onReverse - function pointer called after a reverse
+//      onRepeat - function pointer called after a repeat
+//
+//      TODO - suffix: add a suffice to the end of all values (e.g., 'px')
 function to(object, to, duration, options, ease)
 {
-    options = options || {};
-    ease = ease || Easing.none;
-    var suffix = options.suffix || '';
-    var start, delta, keys;
-    var i = 0;
-    start = [], delta = [], keys = [];
-    for (var key in to)
+    // restart loop
+    function restart()
     {
-        if (isNaN(to[key]))
+        var i = 0;
+        start = [], delta = [], keys = [];
+
+        // loops through all keys in to object
+        for (var key in to)
         {
-            keys[i] = {key: key, children: []};
-            start[i] = [];
-            delta[i] = [];
-            var j = 0;
-            for (var key2 in to[key])
+
+            // handles keys with one additional level e.g.: to = {scale: {x: 5, y: 5}}
+            if (isNaN(to[key]))
             {
-                keys[i].children[j] = key2;
-                start[i][j] = object[key][key2];
-                delta[i][j] = to[key][key2] - object[key][key2];
-                j++;
-            }
-        }
-        else
-        {
-            start[i] = object[key];
-            delta[i] = to[key] - object[key];
-            keys[i] = key;
-        }
-        i++;
-    }
-    var time = 0;
-    var update = Update.add(
-        function (elapsed)
-        {
-            if (options.pause)
-            {
-                return;
-            }
-            if (options.cancel)
-            {
-                if (options.onDone)
+                keys[i] = {key: key, children: []};
+                start[i] = [];
+                delta[i] = [];
+                var j = 0;
+                for (var key2 in to[key])
                 {
-                    options.onDone(elapsed, object);
+                    keys[i].children[j] = key2;
+                    start[i][j] = object[key][key2];
+                    delta[i][j] = to[key][key2] - object[key][key2];
+                    j++;
                 }
-                object = null;
-                options = null;
-                return true;
             }
-            if (options.wait)
+            else
             {
-                duration = 0;
+                start[i] = object[key];
+                delta[i] = to[key] - object[key];
+                keys[i] = key;
             }
-            time += elapsed;
-            time = (time > duration) ? duration : time;
+            i++;
+        }
+        time = 0;
+    }
+
+    // time expired
+    function end(leftOver)
+    {
+        if (options.reverse)
+        {
             for (var i = 0; i < keys.length; i++)
             {
                 if (isNaN(to[keys[i]]))
                 {
                     for (var j = 0; j < keys[i].children.length; j++)
                     {
-                        object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration);
+                        delta[i][j] = -delta[i][j];
+                        start[i][j] = object[keys[i].key][keys[i].children[j]];
                     }
                 }
                 else
                 {
-                    object[keys[i]] = ease(time, start[i], delta[i], duration);
+                    delta[i] = -delta[i];
+                    start[i] = object[keys[i]];
                 }
             }
-            if (options.onEach)
+            time = leftOver;
+            if (!options.repeat)
             {
-                options.onEach(elapsed, object);
+                options.reverse = false;
             }
-            // check if we're done
-            if (time === duration)
+            else
             {
-                if (options.reverse)
+                if (options.repeat !== true)
                 {
-                    for (var i = 0; i < keys.length; i++)
-                    {
-                        if (isNaN(to[keys[i]]))
-                        {
-                            for (var j = 0; j < keys[i].children.length; j++)
-                            {
-                                delta[i][j] = -delta[i][j];
-                                start[i][j] = object[keys[i].key][keys[i].children[j]];
-                            }
-                        }
-                        else
-                        {
-                            delta[i] = -delta[i];
-                            start[i] = object[keys[i]];
-                        }
-                    }
-                    time = 0;
-                    if (!options.repeat)
-                    {
-                        options.reverse = false;
-                    }
-                    else
-                    {
-                        if (options.repeat !== true)
-                        {
-                            options.repeat--;
-                        }
-                    }
+                    options.repeat--;
                 }
-                else if (options.repeat)
+            }
+            if (options.onLoop)
+            {
+                onLoop(object, options);
+            }
+        }
+        else if (options.repeat)
+        {
+            time = leftOver;
+            if (options.repeat !== true)
+            {
+                options.repeat--;
+            }
+            if (options.onLoop)
+            {
+                onLoop(object, options);
+            }
+        }
+        else if (options.continue)
+        {
+            for (var i = 0; i < keys.length; i++)
+            {
+                if (isNaN(to[keys[i]]))
                 {
-                    time = 0;
-                    if (options.repeat !== true)
+                    for (var j = 0; j < keys[i].children.length; j++)
                     {
-                        options.repeat--;
-                    }
-                }
-                else if (options.continue)
-                {
-                    for (var i = 0; i < keys.length; i++)
-                    {
-                        if (isNaN(to[keys[i]]))
-                        {
-                            for (var j = 0; j < keys[i].children.length; j++)
-                            {
-                                start[i][j] = object[keys[i].key][keys[i].children[j]];
-                            }
-                        }
-                        else
-                        {
-                            start[i] = object[keys[i]];
-                        }
-                    }
-                    time = 0;
-                    if (options.continue !== true)
-                    {
-                        options.continue--;
+                        start[i][j] = object[keys[i].key][keys[i].children[j]];
                     }
                 }
                 else
                 {
-                    if (options.onDone)
-                    {
-                        options.onDone(elapsed, object);
-                    }
-                    object = null;
-                    options = null;
-                    return true;
+                    start[i] = object[keys[i]];
+                }
+            }
+            time = leftOver;
+            if (options.continue !== true)
+            {
+                options.continue--;
+            }
+            if (options.onLoop)
+            {
+                onLoop(object, options);
+            }
+        }
+        else
+        {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
+            object = null;
+            options = null;
+            return true;
+        }
+    }
+
+    // update loop
+    function update(elapsed)
+    {
+        if (options.pause)
+        {
+            return;
+        }
+        if (options.wait)
+        {
+            options.wait -= elapsed;
+            if (options.wait < 0)
+            {
+                elapsed += options.wait;
+                options.wait = false;
+            }
+            else
+            {
+                return;
+            }
+        }
+        if (options.cancel)
+        {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
+            object = null;
+            options = null;
+            return true;
+        }
+        if (options.restart)
+        {
+            restart();
+        }
+        if (options.original)
+        {
+            time = 0;
+        }
+        if (!first)
+        {
+            first = true;
+            if (options.onFirst)
+            {
+                options.onFirst(object);
+            }
+        }
+        time += elapsed;
+        var leftOver = 0;
+        if (time > duration)
+        {
+            leftOver = time - duration;
+            time = duration;
+        }
+        for (var i = 0; i < keys.length; i++)
+        {
+            if (isNaN(to[keys[i]]))
+            {
+                for (var j = 0; j < keys[i].children.length; j++)
+                {
+                    object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration);
                 }
             }
             else
             {
+                object[keys[i]] = ease(time, start[i], delta[i], duration);
             }
-        },
-    options.wait ? options.wait : 0);
+        }
+        if (options.onEach)
+        {
+            options.onEach(elapsed, object);
+        }
+        if (time === duration)
+        {
+            return end(leftOver);
+        }
+    }
+
+    options = options || {};
+    ease = ease || Easing.none;
+    var time, start, delta, keys, first;
+    restart();
+    Update.add(update);
     return options;
-}
-
-// destroys an animation
-function cancel(animate)
-{
-    animate.cancel = true;
-}
-
-// pauses an animation
-function pause(animate)
-{
-    animate.pause = true;
-}
-
-// resumes an animation
-function resume(animate)
-{
-    animate.resume = true;
 }
 
 function tint(object, tint, duration, options, ease)
@@ -1105,9 +1165,6 @@ function update(elapsed)
 // exports
 var Animate = {
     to: to,
-    cancel: cancel,
-    pause: pause,
-    resume: resume,
     tint: tint,
     shake: shake
 };
