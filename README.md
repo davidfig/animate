@@ -1,7 +1,7 @@
 ## animate.js
 a configurable javascript animation library; designed for use with https://github.com/pixijs/pixi.js, https://github.com/davidfig/update/, and https://github.com/davidfig/debug/
 
-## Code Example
+## Example
 
         // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
         Debug.init();
@@ -67,13 +67,13 @@ a configurable javascript animation library; designed for use with https://githu
             return g;
         }
 
+## Live Example
+https://davidfig.github.io/animate/
+
 ## Installation
 include animate.js in your project or add to your workflow
 
     <script src="animate.js"></script>
-
-## Example
-https://davidfig.github.io/animate/
 
 ## API Reference
 

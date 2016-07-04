@@ -12,6 +12,7 @@
 // options {}
 //
 //      wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
+//      renderer - sets renderer.dirty = true for each loop
 //
 //      __change active animation__ (assigned through returned options from to())
 //      pause - pause animation
@@ -229,6 +230,10 @@ function to(object, to, duration, options, ease)
         if (options.onEach)
         {
             options.onEach(elapsed, object);
+        }
+        if (options.renderer)
+        {
+            renderer.dirty = true;
         }
         if (time === duration)
         {
