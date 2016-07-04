@@ -70,6 +70,13 @@ a configurable javascript animation library; designed for use with https://githu
 ## Live Example
 https://davidfig.github.io/animate/
 
+see also
+
+* https://davidfig.github.io/debug/
+* https://davidfig.github.io/update/
+* https://davidfig.github.io/renderer/
+* https://davidfig.github.io/viewport/
+
 ## Installation
 include animate.js in your project or add to your workflow
 
