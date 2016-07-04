@@ -82,7 +82,7 @@ https://davidfig.github.io/animate/
   - reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
   - continue - true = continue animation with new starting values; n = continue animation n times
 
-  - __callbacks
+  __callbacks__
   - onDone - function pointer for when the animation expires or is cancelled
   - onFirst - function pointer for first time update is called (does not include pause or wait time)
   - onEach - function pointer called after each update
