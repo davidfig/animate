@@ -67,13 +67,13 @@ a configurable javascript animation library; designed for use with https://githu
             return g;
         }
 
+## Live Example
+https://davidfig.github.io/animate/
+
 ## Installation
 include animate.js in your project or add to your workflow
 
     <script src="animate.js"></script>
-
-## Example
-https://davidfig.github.io/animate/
 
 ## API Reference
 
