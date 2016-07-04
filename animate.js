@@ -3,7 +3,7 @@
     License: MIT license <https://github.com/davidfig/animate/license>
     Author: David Figatner
     Copyright (c) 2016 YOPEY YOPEY LLC
-*/ (function(){
+*/ ;(function(){
 
 // animate any numeric parameter
 // object - object to animate
@@ -1103,4 +1103,4 @@ if (typeof exports !== 'undefined')
 if (typeof window !== 'undefined')
 {
     window.Animate = Animate;
-} })();
+}   })();
