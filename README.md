@@ -1,5 +1,5 @@
-## animate
-a configurable javascript animation library; designed for use with pixi.js
+## animate.js
+a configurable javascript animation library; designed for use with https://github.com/pixijs/pixi.js, https://github.com/davidfig/update/, and https://github.com/davidfig/debug/
 
 ## Code Example
 
