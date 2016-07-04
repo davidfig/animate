@@ -71,13 +71,13 @@ https://davidfig.github.io/animate/
 
   - wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
 
-  - __change active animation__ (assigned through returned options from to())
+  __change active animation__ (assigned through returned options from to())
   - pause - pause animation
   - cancel - cancel animation
   - restart - restart animation with current starting values
   - original - restart animation with original starting values
 
-  - __when animation expires__
+  __when animation expires__
   - repeat - true = repeat animation forever; n = repeat animation n times
   - reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
   - continue - true = continue animation with new starting values; n = continue animation n times
