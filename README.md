@@ -3,69 +3,69 @@ a configurable javascript animation library; designed for use with https://githu
 
 ## Code Example
 
-    // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
-    Debug.init();
-    Update.init();
+        // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
+        Debug.init();
+        Update.init();
 
-    // set up pixi and shapes
-    var renderer, stage, red, green, blue, sprite;
-    pixi();
+        // set up pixi and shapes
+        var renderer, stage, red, green, blue, sprite;
+        pixi();
 
-    // red triangle fades, moves, and scales; repeats and reverses forever
-    Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
-        {repeat: true, reverse: true}, Easing.easeInOutSine);
+        // red triangle fades, moves, and scales; repeats and reverses forever
+        Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
+            {repeat: true, reverse: true}, Easing.easeInOutSine);
 
-    // green triangle moves, rotates, and fades when done
-    Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
-        {reverse: true, onDone: function (object) { Animate.to(object, {alpha: 0}, 2000); }}, Easing.easeInSine);
+        // green triangle moves, rotates, and fades when done
+        Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
+            {reverse: true, onDone: function (object) { Animate.to(object, {alpha: 0}, 2000); }}, Easing.easeInSine);
 
-    // blue triangle spins forever
-    Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
+        // blue triangle spins forever
+        Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 
-    // circle changes from blue to red and reverse and repeats
-    Animate.tint(sprite, 0xff0000, 2000, {repeat: true, reverse: true});
+        // circle changes from blue to red and reverse and repeats
+        Animate.tint(sprite, 0xff0000, 2000, {repeat: true, reverse: true});
 
-    // circle also shakes forever, it starts after 1 second
-    Animate.shake(sprite, 5, 0, {repeat: true, wait: 1000});
+        // circle also shakes forever, it starts after 1 second
+        Animate.shake(sprite, 5, 0, {repeat: true, wait: 1000});
 
-    // render loop
-    function update()
-    {
-        renderer.render(stage);
-    }
-    Update.add(update, null, {percent: 'Render'});
-    Update.update();
+        // render loop
+        function update()
+        {
+            renderer.render(stage);
+        }
+        Update.add(update, null, {percent: 'Render'});
+        Update.update();
 
-    function pixi()
-    {
-        renderer = new PIXI.WebGLRenderer(1000, 1000, {transparent: true});
-        document.body.appendChild(this.renderer.view);
-        stage = new PIXI.Container();
-        red = triangle(100, 0xff0000);
-        red.position.set(50, 50);
-        green = triangle(50, 0x00ff00);
-        green.position.set(300,300);
-        blue = triangle(50, 0x0000ff);
-        blue.position.set(500,100);
-        sprite = PIXI.Sprite.fromImage('circle.png');
-        stage.addChild(sprite);
-        sprite.tint = 0x0000ff;
-        sprite.position.set(200, 200);
-    }
+        function pixi()
+        {
+            renderer = new PIXI.WebGLRenderer(1000, 1000, {transparent: true});
+            document.body.appendChild(this.renderer.view);
+            stage = new PIXI.Container();
+            red = triangle(100, 0xff0000);
+            red.position.set(50, 50);
+            green = triangle(50, 0x00ff00);
+            green.position.set(300,300);
+            blue = triangle(50, 0x0000ff);
+            blue.position.set(500,100);
+            sprite = PIXI.Sprite.fromImage('circle.png');
+            stage.addChild(sprite);
+            sprite.tint = 0x0000ff;
+            sprite.position.set(200, 200);
+        }
 
-    function triangle(size, color)
-    {
-        var half = size / 2;
-        var g = new PIXI.Graphics();
-        stage.addChild(g);
-        g.beginFill(color);
-        g.moveTo(0, -half);
-        g.lineTo(-half, half);
-        g.lineTo(half, half);
-        g.closePath();
-        g.endFill();
-        return g;
-    }
+        function triangle(size, color)
+        {
+            var half = size / 2;
+            var g = new PIXI.Graphics();
+            stage.addChild(g);
+            g.beginFill(color);
+            g.moveTo(0, -half);
+            g.lineTo(-half, half);
+            g.lineTo(half, half);
+            g.closePath();
+            g.endFill();
+            return g;
+        }
 
 ## Installation
 include animate.js in your project or add to your workflow
