@@ -5,9 +5,12 @@
 
     <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
     <script src="https://rawgit.com/davidfig/update/master/update.js"></script>
-    <script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>
+    <!--<script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>-->
     <script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>
     <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>
+
+    <!--local-->
+    <script src="../renderer/renderer.js"></script>
 
     <style>
         body {
@@ -62,7 +65,7 @@
 
         function pixi()
         {
-            renderer = new Renderer({transparent: true, styles: {pointer-events: "none"}});
+            renderer = new Renderer({transparent: true, styles: {background: green, pointerEvents: "none"}});
             red = triangle(100, 0xff0000);
             red.position.set(50, 50);
             green = triangle(50, 0x00ff00);
