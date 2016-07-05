@@ -62,7 +62,7 @@
 
         function pixi()
         {
-            renderer = new Renderer({transparent: true});
+            renderer = new Renderer({transparent: true, styles: {pointer-events: "none"}});
             red = triangle(100, 0xff0000);
             red.position.set(50, 50);
             green = triangle(50, 0x00ff00);
