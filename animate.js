@@ -934,7 +934,7 @@ add: function(animate)
     }
     return animate;
 }
-*/
+
 function update(elapsed)
 {
     if (removeQueue.length)
@@ -1074,7 +1074,7 @@ function update(elapsed)
         debugLast = animating;
     }
 }
-
+*/
 // exports
 var Animate = {
     to: to,
