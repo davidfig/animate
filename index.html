@@ -2,10 +2,13 @@
     <script src="https://rawgit.com/pixijs/pixi.js/dev/bin/pixi.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
-    <script src="easing.js"></script>
-    <script src="animate.js"></script>
-    <script src="../update/update.js"></script>
-    <script src="../debug/debug.js"></script>
+
+    <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
+    <script src="https://rawgit.com/davidfig/update/master/update.js"></script>
+    <script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>
+    <script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>
+    <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -34,12 +37,13 @@
         Update.init();
 
         // set up pixi and shapes
-        var renderer, stage, red, green, blue, sprite;
+        var renderer, red, green, blue, sprite;
         pixi();
 
         // red triangle fades, moves, and scales; repeats and reverses forever
+        // NOTE: the "renderer: renderer" option marks the renderer as dirty each update to ensure the page is redrawn
         Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
-            {repeat: true, reverse: true}, Easing.easeInOutSine);
+            {repeat: true, reverse: true, renderer: renderer}, Easing.easeInOutSine);
 
         // green triangle moves, rotates, and fades when done
         Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
@@ -54,19 +58,11 @@
         // circle also shakes forever, it starts after 1 second
         Animate.shake(sprite, 5, 0, {repeat: true, wait: 1000});
 
-        // render loop
-        function update()
-        {
-            renderer.render(stage);
-        }
-        Update.add(update, null, {percent: 'Render'});
         Update.update();
 
         function pixi()
         {
-            renderer = new PIXI.WebGLRenderer(1000, 1000, {transparent: true});
-            document.body.appendChild(this.renderer.view);
-            stage = new PIXI.Container();
+            renderer = new Renderer({transparent: true});
             red = triangle(100, 0xff0000);
             red.position.set(50, 50);
             green = triangle(50, 0x00ff00);
@@ -74,7 +70,7 @@
             blue = triangle(50, 0x0000ff);
             blue.position.set(500,100);
             sprite = PIXI.Sprite.fromImage('circle.png');
-            stage.addChild(sprite);
+            renderer.addChild(sprite);
             sprite.tint = 0x0000ff;
             sprite.position.set(200, 200);
         }
@@ -83,7 +79,7 @@
         {
             var half = size / 2;
             var g = new PIXI.Graphics();
-            stage.addChild(g);
+            renderer.addChild(g);
             g.beginFill(color);
             g.moveTo(0, -half);
             g.lineTo(-half, half);
