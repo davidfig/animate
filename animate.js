@@ -235,7 +235,7 @@ function to(object, to, duration, options, ease)
         }
         if (options.renderer)
         {
-            renderer.dirty = true;
+            options.renderer.dirty = true;
         }
         if (time === duration)
         {
@@ -1100,7 +1100,8 @@ function update(elapsed)
 var Animate = {
     to: to,
     tint: tint,
-    shake: shake
+    shake: shake,
+    cancel: cancel
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
