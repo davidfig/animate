@@ -163,6 +163,26 @@ function to(object, to, duration, options, ease)
     // update loop
     function update(elapsed)
     {
+        if (options.cancel)
+        {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
+            object = null;
+            options = null;
+            return true;
+        }
+        if (options.restart)
+        {
+            restart();
+            options.pause = false;
+        }
+        if (options.original)
+        {
+            time = 0;
+            options.pause = false;
+        }
         if (options.pause)
         {
             return;
@@ -179,24 +199,6 @@ function to(object, to, duration, options, ease)
             {
                 return;
             }
-        }
-        if (options.cancel)
-        {
-            if (options.onDone)
-            {
-                options.onDone(object);
-            }
-            object = null;
-            options = null;
-            return true;
-        }
-        if (options.restart)
-        {
-            restart();
-        }
-        if (options.original)
-        {
-            time = 0;
         }
         if (!first)
         {
@@ -298,6 +300,25 @@ function shake(object, amount, duration, options, ease)
 
     object.shake = 0;
     return to(object, {shake: 1}, duration, options, ease);
+}
+
+// accepts either an animation or list of animations
+function cancel(animate)
+{
+    if (animate)
+    {
+        if (Array.isArray(animate))
+        {
+            for (var i = 0; i < animate.length; i++)
+            {
+                animate[i].cancel = true;
+            }
+        }
+        else
+        {
+            animate.cancel = true;
+        }
+    }
 }
 
 /*
