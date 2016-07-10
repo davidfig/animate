@@ -36,15 +36,6 @@
 //
 //      TODO - suffix: add a suffice to the end of all values (e.g., 'px')
 //
-// customized easing function(time, start, delta, duration, options)
-//   time: current time
-//   start: starting value (or {} of starting values)
-//   delta: to - start
-//   options: {}
-//      to: end value
-//      parameter: name of parameter being changed
-//      object: object
-//      options: Animate.to's options (can use it to end the easing function with options.cancel = true)
 function to(object, to, duration, options, ease)
 {
     // restart loop
@@ -232,12 +223,12 @@ function to(object, to, duration, options, ease)
             {
                 for (var j = 0; j < keys[i].children.length; j++)
                 {
-                    object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration, {to: to[i][j], object: object[keys[i].key], parameter: keys[i].children[j], options: options});
+                    object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration);
                 }
             }
             else
             {
-                object[keys[i]] = ease(time, start[i], delta[i], duration, {to: to[i], parameter: keys[i], object: object, options: options});
+                object[keys[i]] = ease(time, start[i], delta[i], duration);
             }
         }
         if (options.onEach)
