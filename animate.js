@@ -305,7 +305,7 @@ function shake(object, amount, duration, options, ease)
 }
 
 // accepts either an animation or list of animations
-function cancel(animate)
+function remove(animate)
 {
     if (animate)
     {
@@ -344,7 +344,7 @@ function cancel(animate)
 //      onDone - function pointer for when the animation expires or is cancelled
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
-function toTarget(object, target, speed, options)
+function target(object, target, speed, options)
 {
     function update(elapsed)
     {
@@ -432,13 +432,97 @@ function toTarget(object, target, speed, options)
     return options;
 }
 
+// move at an angle
+// object - object to animate
+// angle - angle to move at
+// speed - number of pixels to move per millisecond
+// options {}
+//
+//      wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
+//      renderer - sets renderer.dirty = true for each loop
+//
+//      __change active animation__ (assigned through returned options from to())
+//      pause - pause animation
+//      cancel - cancel animation
+//
+//      __callbacks
+//      onDone - function pointer for when the animation expires or is cancelled
+//      onFirst - function pointer for first time update is called (does not include pause or wait time)
+//      onEach - function pointer called after each update
+function angle(object, angle, speed, duration, options)
+{
+    function update(elapsed)
+    {
+        if (options.cancel)
+        {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
+            return true;
+        }
+        if (options.pause)
+        {
+            return;
+        }
+        if (options.wait)
+        {
+            options.wait -= elapsed;
+            if (options.wait < 0)
+            {
+                elapsed += options.wait;
+                options.wait = false;
+            }
+            else
+            {
+                return;
+            }
+        }
+        time += elapsed;
+        if (time >= duration)
+        {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
+            return true;
+        }
+        if (!first)
+        {
+            first = true;
+            if (options.onFirst)
+            {
+                options.onFirst(object);
+            }
+        }
+        object.x += cos * elapsed * speed;
+        object.y += sin * elapsed * speed;
+        if (options.renderer)
+        {
+            options.renderer.dirty = true;
+        }
+        if (options.onEach)
+        {
+            options.onEach(elapsed, object);
+        }
+    }
+
+    options = options || {};
+    var first;
+    var cos = Math.cos(angle);
+    var sin = Math.sin(angle);
+    Update.add(update);
+    return options;
+}
+
 // exports
 var Animate = {
     to: to,
-    toTarget: toTarget,
+    target: target,
+    angle: angle,
     tint: tint,
     shake: shake,
-    cancel: cancel
+    remove: remove
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
