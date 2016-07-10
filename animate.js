@@ -221,12 +221,26 @@ function to(object, to, duration, options, ease)
             {
                 for (var j = 0; j < keys[i].children.length; j++)
                 {
-                    object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration);
+                    if (options.speed)
+                    {
+                        object[keys[i].key][keys[i].children[j]] += options.speed[keys[i].key][keys[i].children[j]];
+                    }
+                    else
+                    {
+                        object[keys[i].key][keys[i].children[j]] = ease(time, start[i][j], delta[i][j], duration);
+                    }
                 }
             }
             else
             {
-                object[keys[i]] = ease(time, start[i], delta[i], duration);
+                if (options.speed)
+                {
+                    object[keys[i]] = ease(time, start[i], delta[i], duration);
+                }
+                else
+                {
+                    object[keys[i]] += options.speed[keys[i]];
+                }
             }
         }
         if (options.onEach)
