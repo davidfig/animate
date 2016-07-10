@@ -8,6 +8,7 @@
  * https://raw.github.com/danro/jquery-easing/master/LICENSE
  *
  * Changed to work with github.com/davidfig/animate
+ * Added: Easing.follow
  * ======================================================== */
 
 /**
