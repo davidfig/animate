@@ -118,11 +118,15 @@ tints a pixi.js sprite
 * tint - the desired tint, e.g., 0xffffff is white, 0xff0000 is red
 * options - same as Animate.to()
 
-### shake(object, amount, duration, options, ease)
+### Animate.shake(object, amount, duration, options, ease)
 shake a pixi.js object
 * object - object to be shaken
 * amount - number of pixels to move
 * options - same as Animate.to()
+
+### Animate.toArray(list, amount, duration, options, ease)
+animate an array of objects
+* except for list, same parameters as Animate.to()
 
 ## License
 MIT License (MIT)
