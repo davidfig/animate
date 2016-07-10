@@ -7,7 +7,7 @@
 
 // animate any numeric parameter
 // object - object to animate
-// to - parameters to animate, e.g.: {alpha: 5, scale: {x, 5}, rotation: Math.PI}
+// goto - parameters to animate, e.g.: {alpha: 5, scale: {x, 5}, rotation: Math.PI}
 // duration - time to run (use 0 for infinite duration--should only be used with customized easing functions)
 // ease - easing function from easing.js (see http://easings.net for examples)
 // options {}
@@ -37,7 +37,7 @@
 //
 //      TODO - suffix: add a suffice to the end of all values (e.g., 'px')
 //
-function to(object, to, duration, options, ease)
+function to(object, goto, duration, options, ease)
 {
     // restart loop
     function restart()
@@ -45,29 +45,29 @@ function to(object, to, duration, options, ease)
         var i = 0;
         start = [], delta = [], keys = [];
 
-        // loops through all keys in to object
-        for (var key in to)
+        // loops through all keys in goto object
+        for (var key in goto)
         {
 
-            // handles keys with one additional level e.g.: to = {scale: {x: 5, y: 5}}
-            if (isNaN(to[key]))
+            // handles keys with one additional level e.g.: goto = {scale: {x: 5, y: 5}}
+            if (isNaN(goto[key]))
             {
                 keys[i] = {key: key, children: []};
                 start[i] = [];
                 delta[i] = [];
                 var j = 0;
-                for (var key2 in to[key])
+                for (var key2 in goto[key])
                 {
                     keys[i].children[j] = key2;
                     start[i][j] = object[key][key2];
-                    delta[i][j] = to[key][key2] - object[key][key2];
+                    delta[i][j] = goto[key][key2] - object[key][key2];
                     j++;
                 }
             }
             else
             {
                 start[i] = object[key];
-                delta[i] = to[key] - object[key];
+                delta[i] = goto[key] - object[key];
                 keys[i] = key;
             }
             i++;
@@ -82,7 +82,7 @@ function to(object, to, duration, options, ease)
         {
             for (var i = 0; i < keys.length; i++)
             {
-                if (isNaN(to[keys[i]]))
+                if (isNaN(goto[keys[i]]))
                 {
                     for (var j = 0; j < keys[i].children.length; j++)
                     {
@@ -129,7 +129,7 @@ function to(object, to, duration, options, ease)
         {
             for (var i = 0; i < keys.length; i++)
             {
-                if (isNaN(to[keys[i]]))
+                if (isNaN(goto[keys[i]]))
                 {
                     for (var j = 0; j < keys[i].children.length; j++)
                     {
@@ -224,7 +224,7 @@ function to(object, to, duration, options, ease)
         }
         for (var i = 0; i < keys.length; i++)
         {
-            if (isNaN(to[keys[i]]))
+            if (isNaN(goto[keys[i]]))
             {
                 for (var j = 0; j < keys[i].children.length; j++)
                 {
@@ -284,7 +284,6 @@ function tint(object, tint, duration, options, ease)
     options = options || {};
     var oldEach = options.onEach;
     options.onEach = each;
-
     return to(colorFrom, colorTo, duration, options, ease);
 }
 
@@ -329,16 +328,16 @@ function remove(animate)
 }
 
 // move to a target
-// object - object to animate
-// to - target to move to (should have a .x and .y parameter)
-// speed - number of pixels to move per millisecond
+// object - object goto animate
+// goto - target goto move goto (should have a .x and .y parameter)
+// speed - number of pixels goto move per millisecond
 // ease - easing function from easing.js (see http://easings.net for examples)
 // options {}
 //
-//      wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
+//      wait - wait n MS before starting animation (can also be used goto pause animation for a length of time)
 //      renderer - sets renderer.dirty = true for each loop
 //
-//      __change active animation__ (assigned through returned options from to())
+//      __change active animation__ (assigned through returned options from goto())
 //      pause - pause animation
 //      cancel - cancel animation
 //
@@ -435,7 +434,6 @@ function target(object, target, speed, options)
             options.onEach(elapsed, object);
         }
     }
-
     options = options || {};
     var lastAngle, cos, sin, first;
     Update.add(update);
@@ -530,13 +528,13 @@ function angle(object, angle, speed, duration, options)
     return options;
 }
 
-function toArray(list, to, duration, options, ease)
+function toArray(list, goto, duration, options, ease)
 {
     function each(elapsed, object)
     {
         for (var i = 0; i < keys.length; i++)
         {
-            if (isNaN(to[keys[i]]))
+            if (isNaN(goto[keys[i]]))
             {
                 for (var j = 0; j < keys[i].children.length; j++)
                 {
@@ -568,16 +566,16 @@ function toArray(list, to, duration, options, ease)
         }
     }
 
-    var keys = [];
-    for (var key in to)
+    var keys = [], i = 0;
+    for (var key in goto)
     {
 
-        // handles keys with one additional level e.g.: to = {scale: {x: 5, y: 5}}
-        if (isNaN(to[key]))
+        // handles keys with one additional level e.g.: goto = {scale: {x: 5, y: 5}}
+        if (isNaN(goto[key]))
         {
             keys[i] = {key: key, children: []};
             var j = 0;
-            for (var key2 in to[key])
+            for (var key2 in goto[key])
             {
                 keys[i].children[j] = key2;
                 j++;
@@ -593,7 +591,7 @@ function toArray(list, to, duration, options, ease)
     options.onEach = each;
     var onDone = options.onDone;
     options.onDone = done;
-    to(list[0], to, duration, options, ease);
+    to(list[0], goto, duration, options, ease);
 }
 
 // exports
