@@ -26,8 +26,9 @@
 //      reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
 //      continue - true = continue animation with new starting values; n = continue animation n times
 //
-//      __callbacks
+//      __callbacks__
 //      onDone - function pointer for when the animation expires or is cancelled
+//      onWait - function pointer for wait
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
 //      onLoop - function pointer called after a revere, repeat, or continue
@@ -199,6 +200,10 @@ function to(object, to, duration, options, ease)
             }
             else
             {
+                if (options.onWait)
+                {
+                    options.onWait(object);
+                }
                 return;
             }
         }
@@ -340,10 +345,11 @@ function remove(animate)
 //      __when animation expires__
 //      keepAlive - false (default) don't cancel the animation when target is reached
 //
-//      __callbacks
+//      __callbacks__
 //      onDone - function pointer for when the animation expires or is cancelled
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
+//      onWait - function pointer for wait
 function target(object, target, speed, options)
 {
     function update(elapsed)
@@ -370,6 +376,10 @@ function target(object, target, speed, options)
             }
             else
             {
+                if (options.onWait)
+                {
+                    options.onWait(object);
+                }
                 return;
             }
         }
@@ -445,10 +455,11 @@ function target(object, target, speed, options)
 //      pause - pause animation
 //      cancel - cancel animation
 //
-//      __callbacks
+//      __callbacks__
 //      onDone - function pointer for when the animation expires or is cancelled
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
+//      onWait - function pointer for wait
 function angle(object, angle, speed, duration, options)
 {
     function update(elapsed)
@@ -475,6 +486,10 @@ function angle(object, angle, speed, duration, options)
             }
             else
             {
+                if (options.onWait)
+                {
+                    options.onWait(object);
+                }
                 return;
             }
         }
@@ -515,6 +530,72 @@ function angle(object, angle, speed, duration, options)
     return options;
 }
 
+function toArray(list, to, duration, options, ease)
+{
+    function each(elapsed, object)
+    {
+        for (var i = 0; i < keys.length; i++)
+        {
+            if (isNaN(to[keys[i]]))
+            {
+                for (var j = 0; j < keys[i].children.length; j++)
+                {
+                    for (var k = 1; k < list.length; k++)
+                    {
+                        list[k][keys[i].key][keys[i].children[j]] = list[0][keys[i].key][keys[i].children[j]];
+                    }
+                }
+            }
+            else
+            {
+                for (var k = 1; k < list.length; k++)
+                {
+                    list[k][keys[i]] = list[0][keys[i]];
+                }
+            }
+        }
+        if (onEach)
+        {
+            onEach(elapsed, object);
+        }
+    }
+
+    function done()
+    {
+        if (onDone)
+        {
+            onDone(list);
+        }
+    }
+
+    var keys = [];
+    for (var key in to)
+    {
+
+        // handles keys with one additional level e.g.: to = {scale: {x: 5, y: 5}}
+        if (isNaN(to[key]))
+        {
+            keys[i] = {key: key, children: []};
+            var j = 0;
+            for (var key2 in to[key])
+            {
+                keys[i].children[j] = key2;
+                j++;
+            }
+        }
+        else
+        {
+            keys[i] = key;
+        }
+        i++;
+    }
+    var onEach = options.onEach;
+    options.onEach = each;
+    var onDone = options.onDone;
+    options.onDone = done;
+    to(list[0], to, duration, options, ease);
+}
+
 // exports
 var Animate = {
     to: to,
@@ -522,7 +603,8 @@ var Animate = {
     angle: angle,
     tint: tint,
     shake: shake,
-    remove: remove
+    remove: remove,
+    toArray: toArray
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
