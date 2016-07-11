@@ -390,15 +390,15 @@ function target(object, target, speed, options)
                 options.onFirst(object);
             }
         }
-        var angle = Math.atan2(target.y - object.y, target.x - object.x);
+        var angle = Math.atan2(options.target.y - object.y, options.target.x - object.x);
         if (angle !== lastAngle)
         {
             cos = Math.cos(angle);
             sin = Math.sin(angle);
             lastAngle = angle;
         }
-        var deltaX = target.x - object.x;
-        var deltaY = target.y - object.y;
+        var deltaX = options.target.x - object.x;
+        var deltaY = options.target.y - object.y;
         if (deltaX === 0 && deltaY === 0)
         {
             if (!options.keepAlive)
@@ -416,13 +416,13 @@ function target(object, target, speed, options)
             var signY = deltaY >= 0;
             object.x += cos * elapsed * speed;
             object.y += sin * elapsed * speed;
-            if (signX !== ((target.x - object.x) >= 0))
+            if (signX !== ((options.target.x - object.x) >= 0))
             {
-                object.x = target.x;
+                object.x = options.target.x;
             }
-            else if (signY !== ((target.y - object.y) >= 0))
+            else if (signY !== ((options.target.y - object.y) >= 0))
             {
-                object.y = target.y;
+                object.y = options.target.y;
             }
         }
         if (options.renderer)
@@ -435,6 +435,7 @@ function target(object, target, speed, options)
         }
     }
     options = options || {};
+    options.target = target;
     var lastAngle, cos, sin, first;
     Update.add(update);
     return options;
