@@ -420,7 +420,7 @@ function target(object, target, speed, options)
             {
                 object.x = options.target.x;
             }
-            else if (signY !== ((options.target.y - object.y) >= 0))
+            if (signY !== ((options.target.y - object.y) >= 0))
             {
                 object.y = options.target.y;
             }
@@ -434,9 +434,10 @@ function target(object, target, speed, options)
             options.onEach(elapsed, object);
         }
     }
+
+    var lastAngle, cos, sin, first;
     options = options || {};
     options.target = target;
-    var lastAngle, cos, sin, first;
     Update.add(update);
     return options;
 }
