@@ -346,6 +346,7 @@ function remove(animate)
 //
 //      __callbacks__
 //      onDone - function pointer for when the animation expires or is cancelled
+//               is also triggered when keepAlive = true and the target is reached (triggers on each update)
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
 //      onWait - function pointer for wait
@@ -390,23 +391,23 @@ function target(object, target, speed, options)
                 options.onFirst(object);
             }
         }
-        var angle = Math.atan2(options.target.y - object.y, options.target.x - object.x);
-        if (angle !== lastAngle)
+        if (!lastTarget || options.target.x !== lastTarget.x || options.target.y !== lastTarget.y)
         {
+            var angle = Math.atan2(options.target.y - object.y, options.target.x - object.x);
             cos = Math.cos(angle);
             sin = Math.sin(angle);
-            lastAngle = angle;
+            lastTarget = {x: options.target.x, y: options.target.y};
         }
         var deltaX = options.target.x - object.x;
         var deltaY = options.target.y - object.y;
         if (deltaX === 0 && deltaY === 0)
         {
+            if (options.onDone)
+            {
+                options.onDone(object);
+            }
             if (!options.keepAlive)
             {
-                if (options.onDone)
-                {
-                    options.onDone(object);
-                }
                 return true;
             }
         }
@@ -435,7 +436,7 @@ function target(object, target, speed, options)
         }
     }
 
-    var lastAngle, cos, sin, first;
+    var lastTarget, cos, sin, first;
     options = options || {};
     options.target = target;
     Update.add(update);
