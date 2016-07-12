@@ -6,8 +6,9 @@
     <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
     <script src="https://rawgit.com/davidfig/update/master/update.js"></script>
     <script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>
-    <script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>
-    <!--<script src="../animate/animate.js"></script>-->
+    <script src="https://rawgit.com/davidfig/angle/master/angle.js"></script>
+    <!--<script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>-->
+    <script src="../animate/animate.js"></script>
     <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>
 
     <!-- local
@@ -42,7 +43,7 @@
         Update.init();
 
         // set up pixi and shapes
-        var renderer, red, green, blue, shaker, theDots = [], theDotsScale;
+        var renderer, red, green, blue, shaker, theDots = [], theDotsScale, pacman;
         pixi();
 
         // red triangle fades, moves, and scales; repeats and reverses forever
@@ -66,6 +67,36 @@
         // animate a group that is no a container
         Animate.toArray(theDots, {alpha: 0.01, scale: {x: 3, y: 3}}, 2000, {renderer: renderer, repeat: true, reverse: true}, Easing.easeInOutSine);
 
+        // pacman mouth animation
+        Animate.to(pacman, {angle: 0.01}, 250, {onEach: function()
+            {
+                pacman.clear()
+                    .moveTo(Math.cos(pacman.angle) * pacman.radius / 2, Math.sin(pacman.angle) * pacman.radius / 2)
+                    .lineStyle(pacman.radius, 0xffff00)
+                    .arc(0, 0, pacman.radius / 2, Math.PI * pacman.angle, Math.PI * -pacman.angle, false);
+            }, repeat: true, reverse: true});
+
+        // pacman walking animation
+        function nextTarget()
+        {
+            var target = {x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight};
+
+            // rotate pacman around the short way to the target
+            Animate.remove(rotate);
+            var angle = angleTwoPoints(pacman, target);
+            angle = shortestAngle(pacman.rotation, angle)
+            var rotate = Animate.to(pacman, {rotation: angle}, 500, null, Easing.easeInOutSine);
+            return target;
+        }
+
+        var target = nextTarget(), rotate;
+        var options = Animate.target(pacman, target, 0.15, {keepAlive: true, onDone:
+            function()
+            {
+                options.target = nextTarget();
+            }
+        });
+
         Update.update();
 
         function pixi()
@@ -82,6 +113,7 @@
             shaker.tint = 0x0000ff;
             shaker.position.set(200, 200);
             dots(800, 250, 150, 10);
+            pacmanCreate(100, 100, 100, 100);
         }
 
         function triangle(size, color)
@@ -113,6 +145,14 @@
                 sprite.x = x + Math.cos(angle) * dist;
                 sprite.y = y + Math.sin(angle) * dist;
             }
+        }
+
+        function pacmanCreate(x, y, size)
+        {
+            pacman = renderer.addChild(new PIXI.Graphics());
+            pacman.position.set(x, y);
+            pacman.radius = size / 2;
+            pacman.angle = 0.3;
         }
 
     </script>
