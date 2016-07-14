@@ -317,14 +317,20 @@ function remove(animate)
     {
         if (Array.isArray(animate))
         {
-            for (var i = 0; i < animate.length; i++)
+            while (animate.length)
             {
-                animate[i].cancel = true;
+                var pop = animate.pop();
+                if (pop)
+                {
+                    pop.object = null;
+                    pop.options = null;
+                }
             }
         }
         else
         {
-            animate.cancel = true;
+            animate.object = null;
+            animate.options = null;
         }
     }
 }
