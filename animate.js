@@ -27,7 +27,8 @@
 //      continue - true = continue animation with new starting values; n = continue animation n times
 //
 //      __callbacks__
-//      onDone - function pointer for when the animation expires or is cancelled
+//      onDone - function pointer for when the animation expires
+//      onCancel - function pointer called after cancelled
 //      onWait - function pointer for wait
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
@@ -172,9 +173,9 @@ function to(object, goto, duration, options, ease)
     {
         if (options.cancel)
         {
-            if (options.onDone)
+            if (options.onCancel)
             {
-                options.onDone(object);
+                options.onCancel(object);
             }
             object = null;
             options = null;
@@ -317,6 +318,27 @@ function shake(object, amount, duration, options, ease)
             oldEach(elapsed, object);
         }
     }
+    function done()
+    {
+        if (list)
+        {
+            for (var i = 0; i < list.length; i++)
+            {
+                list[i].x = start[i].x;
+                list[i].y = start[i].y;
+            }
+        }
+        else
+        {
+            object.x = start.x;
+            object.y = start.y;
+        }
+        if (oldDone)
+        {
+            oldDone(object);
+        }
+    }
+
     var list = null, start;
     if (Array.isArray(object))
     {
@@ -335,6 +357,8 @@ function shake(object, amount, duration, options, ease)
     options = options || {};
     var oldEach = options.onEach;
     options.onEach = each;
+    var oldDone = options.onDone;
+    options.onDone = done;
     object.shake = 0;
     return to(object, {shake: 1}, duration, options, ease);
 }
@@ -351,15 +375,13 @@ function remove(animate)
                 var pop = animate.pop();
                 if (pop)
                 {
-                    pop.object = null;
-                    pop.options = null;
+                    pop.cancel = true;
                 }
             }
         }
         else
         {
-            animate.object = null;
-            animate.options = null;
+            animate.cancel = true;
         }
     }
 }
