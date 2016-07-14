@@ -57,15 +57,17 @@ function to(object, goto, duration, options, ease)
                 for (var key2 in goto[key])
                 {
                     keys[i].children[j] = key2;
-                    start[i][j] = object[key][key2];
-                    delta[i][j] = goto[key][key2] - object[key][key2];
+                    start[i][j] = parseFloat(object[key][key2]);
+                    start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
+                    delta[i][j] = goto[key][key2] - start[i][j];
                     j++;
                 }
             }
             else
             {
-                start[i] = object[key];
-                delta[i] = goto[key] - object[key];
+                start[i] = parseFloat(object[key]);
+                start[i] = isNaN(start[i]) ? 0 : start[i];
+                delta[i] = goto[key] - start[i];
                 keys[i] = key;
             }
             i++;
@@ -85,13 +87,15 @@ function to(object, goto, duration, options, ease)
                     for (var j = 0; j < keys[i].children.length; j++)
                     {
                         delta[i][j] = -delta[i][j];
-                        start[i][j] = object[keys[i].key][keys[i].children[j]];
+                        start[i][j] = parseFloat(object[keys[i].key][keys[i].children[j]]);
+                        start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
                     }
                 }
                 else
                 {
                     delta[i] = -delta[i];
-                    start[i] = object[keys[i]];
+                    start[i] = parseFloat(object[keys[i]]);
+                    start[i] = isNaN(start[i]) ? 0 : start[i];
                 }
             }
             time = leftOver;
@@ -131,12 +135,14 @@ function to(object, goto, duration, options, ease)
                 {
                     for (var j = 0; j < keys[i].children.length; j++)
                     {
-                        start[i][j] = object[keys[i].key][keys[i].children[j]];
+                        start[i][j] = parseFloat(object[keys[i].key][keys[i].children[j]]);
+                        start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
                     }
                 }
                 else
                 {
-                    start[i] = object[keys[i]];
+                    start[i] = parseFloat(object[keys[i]]);
+                    start[i] = isNaN(start[i]) ? 0 : start[i];
                 }
             }
             time = leftOver;
@@ -293,19 +299,42 @@ function shake(object, amount, duration, options, ease)
 {
     function each(elapsed, object)
     {
-        object.x = start.x + Math.floor(Math.random() * amount * 2) - amount;
-        object.y = start.y + Math.floor(Math.random() * amount * 2) - amount;
+        if (list)
+        {
+            for (var i = 0; i < list.length; i++)
+            {
+                list[i].x = start[i].x + Math.floor(Math.random() * amount * 2) - amount;
+                list[i].y = start[i].y + Math.floor(Math.random() * amount * 2) - amount;
+            }
+        }
+        else
+        {
+            object.x = start.x + Math.floor(Math.random() * amount * 2) - amount;
+            object.y = start.y + Math.floor(Math.random() * amount * 2) - amount;
+        }
         if (oldEach)
         {
             oldEach(elapsed, object);
         }
     }
-
-    var start = {x: object.x, y: object.y};
+    var list = null, start;
+    if (Array.isArray(object))
+    {
+        list = object;
+        object = list[0];
+        start = [];
+        for (var i = 0; i < list.length; i++)
+        {
+            start[i] = {x: list[i].x, y: list[i].y};
+        }
+    }
+    else
+    {
+        start = {x: object.x, y: object.y};
+    }
     options = options || {};
     var oldEach = options.onEach;
     options.onEach = each;
-
     object.shake = 0;
     return to(object, {shake: 1}, duration, options, ease);
 }
