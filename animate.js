@@ -32,8 +32,6 @@
 //      onFirst - function pointer for first time update is called (does not include pause or wait time)
 //      onEach - function pointer called after each update
 //      onLoop - function pointer called after a revere, repeat, or continue
-//      onReverse - function pointer called after a reverse
-//      onRepeat - function pointer called after a repeat
 //
 //      TODO - suffix: add a suffice to the end of all values (e.g., 'px')
 //
@@ -250,6 +248,10 @@ function to(object, goto, duration, options, ease)
         }
     }
 
+    if (Array.isArray(object))
+    {
+        return toArray(object, goto, duration, options, ease);
+    }
     options = options || {};
     ease = ease || Easing.none;
     var time, start, delta, keys, first;
@@ -604,8 +606,7 @@ var Animate = {
     angle: angle,
     tint: tint,
     shake: shake,
-    remove: remove,
-    toArray: toArray
+    remove: remove
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
