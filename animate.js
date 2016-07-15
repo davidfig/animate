@@ -171,6 +171,11 @@ function to(object, goto, duration, options, ease)
     // update loop
     function update(elapsed)
     {
+        if (!options)
+        {
+            object = null;
+            return true;
+        }
         if (options.cancel)
         {
             if (options.onCancel)
@@ -270,20 +275,33 @@ function to(object, goto, duration, options, ease)
 // tints a pixi.js sprite
 function tint(object, tint, duration, options, ease)
 {
-    object.tint = object.tint || 0xffffff;
-    var r = object.tint >> 16;
-    var g = object.tint >> 8 & 0x0000ff;
-    var b = object.tint & 0x0000ff;
-    var colorFrom = {r: r, g: g, b: b};
+    function toRGB(hex)
+    {
+        var r = hex >> 16;
+        var g = hex >> 8 & 0x0000ff;
+        var b = hex & 0x0000ff;
+        return {r: r, g: g, b: b};
+    }
 
-    r = tint >> 16;
-    g = tint >> 8 & 0x0000ff;
-    b = tint & 0x0000ff;
-    var colorTo = {r: r, g: g, b: b};
+    function toHex(rgb)
+    {
+        return rgb.r << 16 | rgb.g << 8 | rgb.b;
+    }
 
     function each(elapsed, current)
     {
-        object.tint = current.r << 16 | current.g << 8 | current.b;
+        if (list)
+        {
+            var tint = toHex(current);
+            for (var i = 0; i < list.length; i++)
+            {
+                list[i].tint = tint;
+            }
+        }
+        else
+        {
+            object.tint = toHex(current);
+        }
         if (oldEach)
         {
             oldEach(elapsed, current);
@@ -293,6 +311,15 @@ function tint(object, tint, duration, options, ease)
     options = options || {};
     var oldEach = options.onEach;
     options.onEach = each;
+    var list;
+    if (Array.isArray(object))
+    {
+        list = object;
+        object = list[0];
+    }
+    object.tint = object.tint || 0xffffff;
+    var colorFrom = toRGB(object.tint);
+    var colorTo = toRGB(tint);
     return to(colorFrom, colorTo, duration, options, ease);
 }
 
@@ -413,6 +440,10 @@ function target(object, target, speed, options)
 {
     function update(elapsed)
     {
+        if (!options)
+        {
+            return true;
+        }
         if (options.cancel)
         {
             if (options.onDone)
