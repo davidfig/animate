@@ -687,6 +687,28 @@ function toArray(list, goto, duration, options, ease)
     to(list[0], goto, duration, options, ease);
 }
 
+function movie(object, textures, duration, options, ease)
+{
+    function each(elapsed)
+    {
+        var index = Math.floor(dummy.count);
+        for (var i = 0; i < list.length; i++)
+        {
+            list[i].texture = textures[index];
+        }
+        if (onEach)
+        {
+            onEach(elapsed, object);
+        }
+    }
+
+    var list = (Array.isArray(object)) ? object : [object];
+    var dummy = {count: 0};
+    var onEach = options.onEach;
+    options.onEach = each;
+    to(dummy, {count: textures.length - 1}, duration, options, ease);
+}
+
 // exports
 var Animate = {
     to: to,
@@ -694,7 +716,8 @@ var Animate = {
     angle: angle,
     tint: tint,
     shake: shake,
-    remove: remove
+    remove: remove,
+    movie: movie
 };
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
