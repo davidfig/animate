@@ -416,7 +416,7 @@ function remove(animate)
 // move to a target
 // object - object goto animate
 // goto - target goto move goto (should have a .x and .y parameter)
-// speed - number of pixels goto move per millisecond
+// speed - number of pixels to move per millisecond
 // ease - easing function from easing.js (see http://easings.net for examples)
 // options {}
 //
