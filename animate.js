@@ -494,7 +494,7 @@ function target(object, target, speed, options)
                 options.onFirst(object);
             }
         }
-        if (!lastTarget || options.target.x !== lastTarget.x || options.target.y !== lastTarget.y)
+        if (!lastTarget || options.target.x !== lastTarget.x || options.target.y !== lastTarget.y || lastTarget.posX !== object.x || lastTarget.posY !== object.y)
         {
             var angle = Math.atan2(options.target.y - object.y, options.target.x - object.x);
             cos = Math.cos(angle);
@@ -528,6 +528,8 @@ function target(object, target, speed, options)
             {
                 object.y = options.target.y;
             }
+            lastTarget.posX = object.x;
+            lastTarget.posY = object.y;
         }
         if (options.renderer)
         {
