@@ -59,6 +59,7 @@ function to(object, goto, duration, options, ease)
                 {
                     keys[i].children[j] = key2;
                     start[i][j] = parseFloat(object[key][key2]);
+                    start[i][j] = correctDOM(key2, start[i][j]);
                     start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
                     delta[i][j] = goto[key][key2] - start[i][j];
                     j++;
@@ -67,6 +68,7 @@ function to(object, goto, duration, options, ease)
             else
             {
                 start[i] = parseFloat(object[key]);
+                start[i] = correctDOM(key, start[i]);
                 start[i] = isNaN(start[i]) ? 0 : start[i];
                 delta[i] = goto[key] - start[i];
                 keys[i] = key;
@@ -270,6 +272,17 @@ function to(object, goto, duration, options, ease)
     restart();
     Update.add(update);
     return options;
+}
+
+// correct certain DOM values
+function correctDOM(key, value)
+{
+    switch (key)
+    {
+    case 'opacity':
+        return (isNaN(value)) ? 1 : value;
+    }
+    return value;
 }
 
 // tints a pixi.js sprite
