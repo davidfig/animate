@@ -814,7 +814,7 @@ var Animate = {
                     options.onFirst(object);
                 }
             }
-            var angle = AngleTwoPoints(object.position, options.target);
+            var angle = angleTwoPoints(object.position, options.target);
             if (angle === object.rotation)
             {
                 if (options.onDone)
@@ -828,26 +828,12 @@ var Animate = {
             }
             else
             {
-                var shortest = ShortestAngle(object.rotation, angle);
+                var shortest = shortestAngle(object.rotation, angle);
                 var difference = differenceAngles(object.rotation, shortest);
                 var sign = differenceAnglesSign(object.rotation, shortest);
                 var change = speed * elapsed;
                 var delta = (change > difference) ? difference : change;
-                return delta + start;
-                var signX = deltaX >= 0;
-                var signY = deltaY >= 0;
-                object.x += cos * elapsed * speed;
-                object.y += sin * elapsed * speed;
-                if (signX !== ((options.target.x - object.x) >= 0))
-                {
-                    object.x = options.target.x;
-                }
-                if (signY !== ((options.target.y - object.y) >= 0))
-                {
-                    object.y = options.target.y;
-                }
-                lastTarget.posX = object.x;
-                lastTarget.posY = object.y;
+                object.rotation += delta * sign;
             }
             if (options.renderer)
             {
@@ -859,7 +845,7 @@ var Animate = {
             }
         }
 
-        var lastTarget, cos, sin, first;
+        var first;
         options = options || {};
         options.target = target;
         Update.add(update);
