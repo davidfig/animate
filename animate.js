@@ -7,6 +7,8 @@
 
 var Animate = {
 
+    PI_2: Math.PI * 2,
+
     // animate any numeric parameter
     // object - object to animate
     // goto - parameters to animate, e.g.: {alpha: 5, scale: {x, 5}, rotation: Math.PI}
@@ -756,8 +758,8 @@ var Animate = {
 
         function differenceAngles(a, b)
         {
-            var c = Math.abs(a - b) % PI_2;
-            return c > Math.PI ? (PI_2 - c) : c;
+            var c = Math.abs(a - b) % Animate.PI_2;
+            return c > Math.PI ? (Animate.PI_2 - c) : c;
         }
 
         function differenceAnglesSign(target, source)
@@ -768,7 +770,7 @@ var Animate = {
             }
 
             var a = target - source;
-            return mod((a + Math.PI), PI_2) - Math.PI > 0 ? 1 : -1;
+            return mod((a + Math.PI), Animate.PI_2) - Math.PI > 0 ? 1 : -1;
         }
 
         function update(elapsed)
@@ -828,9 +830,8 @@ var Animate = {
             }
             else
             {
-                var shortest = shortestAngle(object.rotation, angle);
-                var difference = differenceAngles(object.rotation, shortest);
-                var sign = differenceAnglesSign(object.rotation, shortest);
+                var difference = differenceAngles(angle, object.rotation);
+                var sign = differenceAnglesSign(angle, object.rotation);
                 var change = speed * elapsed;
                 var delta = (change > difference) ? difference : change;
                 object.rotation += delta * sign;
