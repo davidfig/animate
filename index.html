@@ -3,13 +3,21 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
 
-    <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
     <script src="https://rawgit.com/davidfig/update/master/update.js"></script>
     <script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>
     <script src="https://rawgit.com/davidfig/angle/master/angle.js"></script>
     <script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>
-    <!--<script src="../animate/animate.js"></script>-->
+    <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
     <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>
+
+    <!--for local testing-->
+    <!--<script src="../debug/debug.js"></script>
+    <script src="../update/update.js"></script>
+    <script src="../renderer/renderer.js"></script>
+    <script src="../angle/angle.js"></script>
+    <script src="../animate/animate.js"></script>
+    <script src="../animate/easing.js"></script>
+    <script src="../animate/animate.js"></script>-->
 
     <style>
         body {
@@ -36,7 +44,7 @@
 
         // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
         Debug.init();
-        Update.init();
+        Update.init({debug: true});
 
         // set up pixi and shapes
         var renderer, red, green, blue, shaker, theDots = [], theDotsScale, pacman;
@@ -60,8 +68,8 @@
         // circle also shakes forever, it starts after 1 second
         Animate.shake(shaker, 5, 0, {repeat: true, wait: 1000});
 
-        // animate a group that is no a container
-        Animate.toArray(theDots, {alpha: 0.01, scale: {x: 3, y: 3}}, 2000, {renderer: renderer, repeat: true, reverse: true}, Easing.easeInOutSine);
+        // animate a group that is not a container
+        Animate.to(theDots, {alpha: 0.01, scale: {x: 3, y: 3}}, 2000, {renderer: renderer, repeat: true, reverse: true}, Easing.easeInOutSine);
 
         // pacman mouth animation
         Animate.to(pacman, {angle: 0.01}, 250, {onEach: function()
@@ -93,6 +101,11 @@
             }
         });
 
+        // triangle facing pacman
+        var facing = pointer(100, 0x00ffff);
+        facing.position.set(600, 400);
+        Animate.face(facing, pacman, 0.00075, {keepAlive: true});
+
         Update.update();
 
         function pixi()
@@ -123,6 +136,20 @@
             g.lineTo(half, half);
             g.closePath();
             g.endFill();
+            return g;
+        }
+
+        function pointer(size, color)
+        {
+            var g = new PIXI.Graphics();
+            renderer.addChild(g);
+            g.beginFill(color);
+            g.drawCircle(0, 0, size / 2);
+            g.endFill();
+            g.lineStyle(10, color);
+            g.moveTo(0, 0);
+            g.lineTo(-size, 0);
+            g.closePath();
             return g;
         }
 
