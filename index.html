@@ -15,7 +15,6 @@
     <script src="../update/update.js"></script>
     <script src="../renderer/renderer.js"></script>
     <script src="../angle/angle.js"></script>
-    <script src="../animate/animate.js"></script>
     <script src="../animate/easing.js"></script>
     <script src="../animate/animate.js"></script>-->
 
@@ -45,6 +44,7 @@
         // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
         Debug.init();
         Update.init({debug: true});
+        Animate.init();
 
         // set up pixi and shapes
         var renderer, red, green, blue, shaker, theDots = [], theDotsScale, pacman;
@@ -94,10 +94,10 @@
         }
 
         var target = nextTarget(), rotate;
-        var options = Animate.target(pacman, target, 0.15, {keepAlive: true, onDone:
+        var walking = Animate.target(pacman, target, 0.15, {keepAlive: true, onDone:
             function()
             {
-                options.target = nextTarget();
+                walking.target = nextTarget();
             }
         });
 
