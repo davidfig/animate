@@ -11,7 +11,7 @@ var Animate = {
     list: [],
 
     /**
-     * @param {object} options
+     * @param {object=} options
      * @param {boolean} options.noUpdate - do not add to Update queue (use only if Animate.update() will be called manually)
      */
     init: function(options)
@@ -21,11 +21,6 @@ var Animate = {
         {
             Update.add(Animate.update);
         }
-    },
-
-    add: function(animate)
-    {
-        Animate.list.push(animate);
     },
 
     /**
@@ -56,30 +51,20 @@ var Animate = {
      * @param {object} object to animate
      * @param {object} goto - parameters to animate, e.g.: {alpha: 5, scale: {x, 5}, rotation: Math.PI}
      * @param {number} duration - time to run (use 0 for infinite duration--should only be used with customized easing functions)
-     * @param {function} easing function from easing.js (see http://easings.net for examples)
-     * @param {object} options
-     * @param {number} options.wait n milliseconds before starting animation (can also be used to pause animation for a length of time)
-     * @param {boolean} renderer - sets renderer.dirty = true for each loop
-    //
-    //      __change active animation__ (assigned through returned options from to())
-    //      pause - pause animation
-    //      cancel - cancel animation
-    //      restart - restart animation with current starting values
-    //      original - restart animation with original starting values
-    //
-    //      __when animation expires__
-    //      repeat - true = repeat animation forever; n = repeat animation n times
-    //      reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
-    //      continue - true = continue animation with new starting values; n = continue animation n times
-    //
-    //      __callbacks__
-    //      onDone - function pointer for when the animation expires
-    //      onCancel - function pointer called after cancelled
-    //      onWait - function pointer for wait
-    //      onFirst - function pointer for first time update is called (does not include pause or wait time)
-    //      onEach - function pointer called after each update
-    //      onLoop - function pointer called after a revere, repeat, or continue
-     *
+     * @param {function=Easing.none} easing function from easing.js (see http://easings.net for examples)
+     * @param {object=} options
+     * @param {number=} options.wait n milliseconds before starting animation (can also be used to pause animation for a length of time)
+     * @param {Renderer=} options.renderer - sets Renderer.dirty for each loop
+     * @param {boolean=} options.pause - start the animation paused
+     * @param {boolean|number=} options.repeat - true = repeat animation forever; n = repeat animation n times
+     * @param {boolean|number=} options.reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
+     * @param {boolean|number=} options.continue - true = continue animation with new starting values; n = continue animation n times
+     * @param {function=} options.onDone - function pointer for when the animation expires
+     * @param {function=} options.onCancel - function pointer called after cancelled
+     * @param {function=} options.onWait - function pointer for wait
+     * @param {function=} options.onFirst - function pointer for first time update is called (does not include pause or wait time)
+     * @param {function=} options.onEach - function pointer called after each update
+     * @param {function=} options.onLoop - function pointer called after a revere, repeat, or continue
      */
     to: function(object, goto, duration, options, ease)
     {
@@ -93,9 +78,81 @@ var Animate = {
         }
     },
 
+    /**
+     * move to a target
+     * @param {PIXI.DisplayObject} object - object to animate
+     * @param {PIXI.DisplayObject|PIXI.Point} target (should have a .x and .y parameter)
+     * @param {number} speed - number of pixels to move per millisecond
+     * @param {object=} options
+     * @param {object=} options.wait - wait n milliseconds before starting animation (can also be used to pause animation for a length of time)
+     * @param {Renderer=} renderer - sets Renderer.dirty for each loop
+     * @param {boolean=} pause - pause animation indefinitely
+     * @param {boolean=} keepAlive - don't cancel the animation when target is reached
+     * @param {Function=} onDone - callback for when the animation expires or is cancelled
+     *                             is also triggered when keepAlive = true and the target is reached (triggers on each update)
+     * @param {Function=} onFirst - callback for first time update is called (does not include pause or wait time)
+     * @param {Function=} onEach - callback after each update
+     * @param {Function=} onWait - callback for wait loops
+     * @param {Function} ease - easing function from easing.js (see http://easings.net for examples)
+     */
     target: function(object, target, speed, options)
     {
         return new AnimateTarget(object, target, speed, options);
+    },
+
+    /**
+     * face (spin to) a target
+     * @param {PIXI.DisplayObject} object to spin
+     * @param {PIXI.DisplayObject|PIXI.Point} target to face
+     * @param {number} speed - number of radians to move per millisecond
+     * @param {object} options
+     * @param {number=} options.wait n milliseconds before starting animation (can also be used to pause animation for a length of time)
+     * @param {Renderer=} options.renderer - sets Renderer.dirty for each loop
+     * @param {boolean=} options.pause - start the animation paused
+     * @param {boolean=} options.keepAlive - don't cancel the animation when target is reached
+     * @param {function=} options.onDone - function pointer for when the animation expires
+     * @param {function=} options.onWait - function pointer for wait
+     * @param {function=} options.onFirst - function pointer for first time update is called (does not include pause or wait time)
+     * @param {function=} options.onEach - function pointer called after each update
+     */
+    face: function(object, target, speed, options)
+    {
+        return new AnimateFace(object, target, speed, options);
+    },
+
+    /**
+     * animate a list of PIXI.Textures
+     * @param {PIXI.Sprite} object to animate
+     * @param {PIXI.Texture[]} textures to cycle
+     * @param {number} duration
+     * @param {object=} options (same as Animate.to)
+     * @param {Function=Easing.none} ease - easing function
+     */
+    movie: function(object, textures, duration, options, ease)
+    {
+        function each(elapsed)
+        {
+            var index = Math.floor(dummy.count);
+            for (var i = 0; i < list.length; i++)
+            {
+                list[i].texture = textures[index];
+            }
+            if (onEach)
+            {
+                onEach(elapsed, object);
+            }
+        }
+
+        var list = (Array.isArray(object)) ? object : [object];
+        var dummy = {count: 0};
+        var onEach = options.onEach;
+        options.onEach = each;
+        return new AnimateTo(dummy, {count: textures.length - 1}, duration, options, ease);
+    },
+
+    add: function(animate)
+    {
+        Animate.list.push(animate);
     },
 
     toArray: function(list, goto, duration, options, ease)
@@ -300,6 +357,16 @@ class AnimateBase
         this.object = object;
         this.options = options || {};
         Animate.add(this);
+    }
+
+    pause()
+    {
+        this.options.pause = true;
+    }
+
+    cancel()
+    {
+        this.options.cancel = true;
     }
 
     end(leftOver)
@@ -563,30 +630,6 @@ class AnimateTo extends AnimateBase
     }
 }
 
-// move to a target
-// object - object goto animate
-// goto - target goto move goto (should have a .x and .y parameter)
-// speed - number of pixels to move per millisecond
-// ease - easing function from easing.js (see http://easings.net for examples)
-// options {}
-//
-//      wait - wait n MS before starting animation (can also be used goto pause animation for a length of time)
-//      renderer - sets renderer.dirty = true for each loop
-//
-//      __change active animation__ (assigned through returned options from goto())
-//      pause - pause animation
-//      cancel - cancel animation
-//
-//      __when animation expires__
-//      keepAlive - false (default) don't cancel the animation when target is reached
-//
-//      __callbacks__
-//      onDone - function pointer for when the animation expires or is cancelled
-//               is also triggered when keepAlive = true and the target is reached (triggers on each update)
-//      onFirst - function pointer for first time update is called (does not include pause or wait time)
-//      onEach - function pointer called after each update
-//      onWait - function pointer for wait
-//
 class AnimateTarget extends AnimateBase
 {
     constructor(object, target, speed, options)
@@ -730,153 +773,61 @@ class AnimateTarget extends AnimateBase
 //         return options;
 //     },
 
-//     movie: function(object, textures, duration, options, ease)
-//     {
-//         function each(elapsed)
-//         {
-//             var index = Math.floor(dummy.count);
-//             for (var i = 0; i < list.length; i++)
-//             {
-//                 list[i].texture = textures[index];
-//             }
-//             if (onEach)
-//             {
-//                 onEach(elapsed, object);
-//             }
-//         }
+class AnimateFace extends AnimateBase
+{
+    constructor(object, target, speed, options)
+    {
+        super(object, options);
+        this.target = target;
+        this.speed = speed;
+    }
 
-//         var list = (Array.isArray(object)) ? object : [object];
-//         var dummy = {count: 0};
-//         var onEach = options.onEach;
-//         options.onEach = each;
-//         to(dummy, {count: textures.length - 1}, duration, options, ease);
-//     },
+    angleTwoPoints(p1, p2)
+    {
+        return Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    }
 
-//     // face (spin to) a target
-//     // object - target (PIXI.DisplayObject) to face
-//     // speed - number of radians to move per millisecond
-//     // options {}
-//     //
-//     //      wait - wait n MS before starting animation (can also be used goto pause animation for a length of time)
-//     //      renderer - sets renderer.dirty = true for each loop
-//     //
-//     //      __change active animation__ (assigned through returned options from goto())
-//     //      pause - pause animation
-//     //      cancel - cancel animation
-//     //
-//     //      __when animation expires__
-//     //      keepAlive - false (default) don't cancel the animation when target is reached
-//     //
-//     //      __callbacks__
-//     //      onDone - function pointer for when the animation expires or is cancelled
-//     //               is also triggered when keepAlive = true and the target is reached (triggers on each update)
-//     //      onFirst - function pointer for first time update is called (does not include pause or wait time)
-//     //      onEach - function pointer called after each update
-//     //      onWait - function pointer for wait
-//     face: function(object, target, speed, options)
-//     {
-//         function angleTwoPoints(p1, p2)
-//         {
-//             return Math.atan2(p2.y - p1.y, p2.x - p1.x);
-//         }
+    differenceAngles(a, b)
+    {
+        var c = Math.abs(a - b) % Animate.PI_2;
+        return c > Math.PI ? (Animate.PI_2 - c) : c;
+    }
 
-//         function differenceAngles(a, b)
-//         {
-//             var c = Math.abs(a - b) % Animate.PI_2;
-//             return c > Math.PI ? (Animate.PI_2 - c) : c;
-//         }
+    differenceAnglesSign(target, source)
+    {
+        function mod(a, n)
+        {
+            return (a % n + n) % n;
+        }
 
-//         function differenceAnglesSign(target, source)
-//         {
-//             function mod(a, n)
-//             {
-//                 return (a % n + n) % n;
-//             }
+        var a = target - source;
+        return mod((a + Math.PI), Animate.PI_2) - Math.PI > 0 ? 1 : -1;
+    }
 
-//             var a = target - source;
-//             return mod((a + Math.PI), Animate.PI_2) - Math.PI > 0 ? 1 : -1;
-//         }
-
-//         function update(elapsed)
-//         {
-//             if (!options)
-//             {
-//                 return true;
-//             }
-//             if (options.cancel)
-//             {
-//                 if (options.onDone)
-//                 {
-//                     options.onDone(object);
-//                 }
-//                 return true;
-//             }
-//             if (options.pause)
-//             {
-//                 return;
-//             }
-//             if (options.wait)
-//             {
-//                 options.wait -= elapsed;
-//                 if (options.wait < 0)
-//                 {
-//                     elapsed += options.wait;
-//                     options.wait = false;
-//                 }
-//                 else
-//                 {
-//                     if (options.onWait)
-//                     {
-//                         options.onWait(object);
-//                     }
-//                     return;
-//                 }
-//             }
-//             if (!first)
-//             {
-//                 first = true;
-//                 if (options.onFirst)
-//                 {
-//                     options.onFirst(object);
-//                 }
-//             }
-//             var angle = angleTwoPoints(object.position, options.target);
-//             if (angle === object.rotation)
-//             {
-//                 if (options.onDone)
-//                 {
-//                     options.onDone(object);
-//                 }
-//                 if (!options.keepAlive)
-//                 {
-//                     return true;
-//                 }
-//             }
-//             else
-//             {
-//                 var difference = differenceAngles(angle, object.rotation);
-//                 var sign = differenceAnglesSign(angle, object.rotation);
-//                 var change = speed * elapsed;
-//                 var delta = (change > difference) ? difference : change;
-//                 object.rotation += delta * sign;
-//             }
-//             if (options.renderer)
-//             {
-//                 options.renderer.dirty = true;
-//             }
-//             if (options.onEach)
-//             {
-//                 options.onEach(elapsed, object);
-//             }
-//         }
-
-//         var first;
-//         options = options || {};
-//         options.target = target;
-//         Update.add(update);
-//         return options;
-//     }
-// };
+    calculate(elapsed)
+    {
+        var angle = angleTwoPoints(this.object.position, this.target);
+        if (angle === this.object.rotation)
+        {
+            if (this.options.onDone)
+            {
+                this.options.onDone(this.object);
+            }
+            if (!this.options.keepAlive)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            var difference = differenceAngles(angle, this.object.rotation);
+            var sign = differenceAnglesSign(angle, this.object.rotation);
+            var change = this.speed * elapsed;
+            var delta = (change > difference) ? difference : change;
+            this.object.rotation += delta * sign;
+        }
+    }
+}
 
 // add support for AMD (Asynchronous Module Definition) libraries such as require.js.
 if (typeof define === 'function' && define.amd)
