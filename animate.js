@@ -5,6 +5,9 @@
     Copyright (c) 2016 YOPEY YOPEY LLC
 */
 
+var Easing = require('penner');
+var Update = require('@yy/update');
+
 var Animate = {
 
     PI_2: Math.PI * 2,
