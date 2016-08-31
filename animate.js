@@ -453,7 +453,7 @@ class AnimateBase
         {
             if (this.options.onCancel)
             {
-                this.options.onCancel(object);
+                this.options.onCancel(this.object);
             }
             return true;
         }
@@ -628,7 +628,7 @@ class AnimateTo extends AnimateBase
         }
     }
 
-    calculate(elapsed)
+    calculate(/*elapsed*/)
     {
         for (var i = 0; i < this.keys.length; i++)
         {
@@ -823,7 +823,7 @@ class AnimateFace extends AnimateBase
 
     calculate(elapsed)
     {
-        var angle = angleTwoPoints(this.object.position, this.target);
+        var angle = this.angleTwoPoints(this.object.position, this.target);
         if (angle === this.object.rotation)
         {
             if (this.options.onDone)
@@ -837,8 +837,8 @@ class AnimateFace extends AnimateBase
         }
         else
         {
-            var difference = differenceAngles(angle, this.object.rotation);
-            var sign = differenceAnglesSign(angle, this.object.rotation);
+            var difference = this.differenceAngles(angle, this.object.rotation);
+            var sign = this.differenceAnglesSign(angle, this.object.rotation);
             var change = this.speed * elapsed;
             var delta = (change > difference) ? difference : change;
             this.object.rotation += delta * sign;
