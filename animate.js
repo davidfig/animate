@@ -199,6 +199,7 @@ var Animate = {
             }
         }
 
+        options = options || {};
         var keys = [], i = 0;
         for (var key in goto)
         {
