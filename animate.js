@@ -353,6 +353,10 @@ var Animate = {
                 Animate.list.splice(i, 1);
             }
         }
+    },
+
+    noEase: function (t, b, c, d) {
+        return c*(t/=d) + b;
     }
 };
 
@@ -537,7 +541,7 @@ class AnimateTo extends AnimateBase
         super(object, options);
         this.goto = goto;
         this.duration = duration;
-        this.ease = ease || Easing.none;
+        this.ease = ease || Animate.noEase;
         this.restart();
     }
 
