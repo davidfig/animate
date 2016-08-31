@@ -1,0 +1,19 @@
+{
+  "name": "@yy/animate",
+  "version": "1.0.0",
+  "description": "Javascript animation library for use with PIXI.js",
+  "main": "animate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/davidfig/animate.git"
+  },
+  "author": "david figatner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidfig/animate/issues"
+  },
+  "homepage": "https://github.com/davidfig/animate#readme"
+}

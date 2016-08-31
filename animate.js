@@ -36,12 +36,18 @@ var Animate = {
                 while (animate.length)
                 {
                     var pop = animate.pop();
-                    pop.cancel = true;
+                    if (pop.options)
+                    {
+                        pop.options.cancel = true;
+                    }
                 }
             }
             else
             {
-                animate.cancel = true;
+                if (animate.options)
+                {
+                    animate.options.cancel = true;
+                }
             }
         }
     },
@@ -364,6 +370,11 @@ class AnimateBase
         this.options.pause = true;
     }
 
+    resume()
+    {
+        this.options.pause = false;
+    }
+
     cancel()
     {
         this.options.cancel = true;
@@ -430,14 +441,16 @@ class AnimateBase
 
     update(elapsed)
     {
+        if (!this.options)
+        {
+            return;
+        }
         if (this.options.cancel)
         {
             if (this.options.onCancel)
             {
                 this.options.onCancel(object);
             }
-            this.object = null;
-            this.options = null;
             return true;
         }
         if (this.options.restart)
