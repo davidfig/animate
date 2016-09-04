@@ -3,20 +3,20 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/ascetic.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
 
-    <script src="https://rawgit.com/davidfig/update/master/update.js"></script>
+    <!--<script src="https://rawgit.com/davidfig/update/master/update.js"></script>
     <script src="https://rawgit.com/davidfig/renderer/master/renderer.js"></script>
     <script src="https://rawgit.com/davidfig/angle/master/angle.js"></script>
     <script src="https://rawgit.com/davidfig/debug/master/debug.js"></script>
     <script src="https://rawgit.com/davidfig/animate/master/animate.js"></script>
-    <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>
+    <script src="https://rawgit.com/davidfig/animate/master/easing.js"></script>-->
 
     <!--for local testing-->
-    <!--<script src="../debug/debug.js"></script>
+    <script src="../debug/debug.js"></script>
     <script src="../update/update.js"></script>
     <script src="../renderer/renderer.js"></script>
     <script src="../angle/angle.js"></script>
     <script src="../animate/easing.js"></script>
-    <script src="../animate/animate.js"></script>-->
+    <script src="../animate/animate.js"></script>
 
     <style>
         body {
@@ -105,6 +105,22 @@
         var facing = pointer(100, 0x00ffff);
         facing.position.set(600, 400);
         Animate.face(facing, pacman, 0.00075, {keepAlive: true});
+
+        // angle movement
+        var circleAngle = renderer.add(PIXI.Sprite.fromImage('circle.png'));
+        circleAngle.anchor.set(0.5);
+        circleAngle.tint = 0xff00ff;
+        circleAngle.width = circleAngle.height = 50;
+        circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+        var angleAnimate = Animate.angle(circleAngle, Math.random(), 1, 0, {onEach:
+            function()
+            {
+                if (circleAngle.x > window.innerWidth || circleAngle.x < 0 || circleAngle.y > window.innerHeight || circleAngle.y < 0)
+                {
+                    circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+                    angleAnimate.change(Math.random() * Math.PI * 2);
+                }
+            }});
 
         Update.update();
 
