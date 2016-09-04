@@ -156,6 +156,25 @@ var Animate = {
         return new AnimateTo(dummy, {count: textures.length - 1}, duration, options, ease);
     },
 
+    /**
+     * move at an angle
+     * {PIXI.DisplayObject} object - object to animate
+     * {number} angle - angle to move at
+     * {number} speed - number of pixels to move per millisecond
+     * {number=} duration - milliseconds to move (leave empty or set to 0 for unlimited duration)
+     * {object} options
+     * {number=} options.wait in milliseconds before starting animation (can also be used to pause animation for a length of time)
+     * {Renderer=} renderer - sets renderer.dirty = true for each loop
+     * {Function=} onDone - callback for when the animation expires or is cancelled
+     * {Function=} onFirst - callback for first time update is called (does not include pause or wait time)
+     * {Function=} onEach - callback called after each update
+     * {Function=} onWait - callback for wait
+     */
+    angle: function (object, angle, speed, duration, options)
+    {
+        return new AnimateAngle(object, angle, speed, duration, options);
+    },
+
     add: function(animate)
     {
         Animate.list.push(animate);
@@ -349,7 +368,8 @@ var Animate = {
     {
         for (var i = Animate.list.length - 1; i >= 0; i--)
         {
-            if (Animate.list[i].update(elapsed))
+            var animate = Animate.list[i];
+            if (animate.update(elapsed))
             {
                 Animate.list.splice(i, 1);
             }
@@ -703,93 +723,29 @@ class AnimateTarget extends AnimateBase
     }
 }
 
-//     // move at an angle
-//     // object - object to animate
-//     // angle - angle to move at
-//     // speed - number of pixels to move per millisecond
-//     // options {}
-//     //
-//     //      wait - wait n MS before starting animation (can also be used to pause animation for a length of time)
-//     //      renderer - sets renderer.dirty = true for each loop
-//     //
-//     //      __change active animation__ (assigned through returned options from to())
-//     //      pause - pause animation
-//     //      cancel - cancel animation
-//     //
-//     //      __callbacks__
-//     //      onDone - function pointer for when the animation expires or is cancelled
-//     //      onFirst - function pointer for first time update is called (does not include pause or wait time)
-//     //      onEach - function pointer called after each update
-//     //      onWait - function pointer for wait
-//     angle: function(object, angle, speed, duration, options)
-//     {
-//         function update(elapsed)
-//         {
-//             if (options.cancel)
-//             {
-//                 if (options.onDone)
-//                 {
-//                     options.onDone(object);
-//                 }
-//                 return true;
-//             }
-//             if (options.pause)
-//             {
-//                 return;
-//             }
-//             if (options.wait)
-//             {
-//                 options.wait -= elapsed;
-//                 if (options.wait < 0)
-//                 {
-//                     elapsed += options.wait;
-//                     options.wait = false;
-//                 }
-//                 else
-//                 {
-//                     if (options.onWait)
-//                     {
-//                         options.onWait(object);
-//                     }
-//                     return;
-//                 }
-//             }
-//             time += elapsed;
-//             if (time >= duration)
-//             {
-//                 if (options.onDone)
-//                 {
-//                     options.onDone(object);
-//                 }
-//                 return true;
-//             }
-//             if (!first)
-//             {
-//                 first = true;
-//                 if (options.onFirst)
-//                 {
-//                     options.onFirst(object);
-//                 }
-//             }
-//             object.x += cos * elapsed * speed;
-//             object.y += sin * elapsed * speed;
-//             if (options.renderer)
-//             {
-//                 options.renderer.dirty = true;
-//             }
-//             if (options.onEach)
-//             {
-//                 options.onEach(elapsed, object);
-//             }
-//         }
+class AnimateAngle extends AnimateBase
+{
+    constructor(object, angle, speed, duration, options)
+    {
+        super(object, options);
+        this.sin = Math.sin(angle);
+        this.cos = Math.cos(angle);
+        this.speed = speed;
+        this.duration = duration;
+    }
 
-//         options = options || {};
-//         var first;
-//         var cos = Math.cos(angle);
-//         var sin = Math.sin(angle);
-//         Update.add(update);
-//         return options;
-//     },
+    change(angle)
+    {
+        this.sin = Math.sin(angle);
+        this.cos = Math.cos(angle);
+    }
+
+    calculate(elapsed)
+    {
+        this.object.x += this.cos * elapsed * this.speed;
+        this.object.y += this.sin * elapsed * this.speed;
+    }
+}
 
 class AnimateFace extends AnimateBase
 {
