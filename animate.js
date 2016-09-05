@@ -781,7 +781,7 @@ class AnimateFace extends AnimateBase
     calculate(elapsed)
     {
         var angle = this.angleTwoPoints(this.object.position, this.target);
-        if (angle === this.object.rotation)
+        if (angle === this.object.rotation % Math.PI)
         {
             if (this.options.onDone)
             {
