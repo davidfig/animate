@@ -424,7 +424,7 @@ class AnimateBase
             }
             if (this.options.onLoop)
             {
-                this.onLoop(this.object);
+                this.options.onLoop(this.object);
             }
         }
         else if (this.options.repeat)
@@ -436,7 +436,7 @@ class AnimateBase
             }
             if (this.options.onLoop)
             {
-                this.onLoop(this.object);
+                this.options.onLoop(this.object);
             }
         }
         else if (this.options.continue)
@@ -449,7 +449,7 @@ class AnimateBase
             }
             if (this.options.onLoop)
             {
-                this.onLoop(this.object);
+                this.options.onLoop(this.object);
             }
         }
         else
