@@ -781,7 +781,8 @@ class AnimateFace extends AnimateBase
     calculate(elapsed)
     {
         var angle = this.angleTwoPoints(this.object.position, this.target);
-        if (angle === this.object.rotation % Math.PI)
+        var difference = this.differenceAngles(angle, this.object.rotation);
+        if (difference === 0)
         {
             if (this.options.onDone)
             {
@@ -794,7 +795,6 @@ class AnimateFace extends AnimateBase
         }
         else
         {
-            var difference = this.differenceAngles(angle, this.object.rotation);
             var sign = this.differenceAnglesSign(angle, this.object.rotation);
             var change = this.speed * elapsed;
             var delta = (change > difference) ? difference : change;
