@@ -728,6 +728,7 @@ class AnimateAngle extends AnimateBase
     constructor(object, angle, speed, duration, options)
     {
         super(object, options);
+        this.angle = angle;
         this.sin = Math.sin(angle);
         this.cos = Math.cos(angle);
         this.speed = speed;
