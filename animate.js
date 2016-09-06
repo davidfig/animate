@@ -387,6 +387,7 @@ class AnimateBase
     {
         this.object = object;
         this.options = options || {};
+        this.time = 0;
         Animate.add(this);
     }
 
