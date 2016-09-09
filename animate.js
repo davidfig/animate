@@ -412,13 +412,23 @@ class AnimateBase
         {
             this.reverse();
             this.time = leftOver;
-            if (this.options.repeat !== true)
+            if (!this.options.repeat)
             {
-                this.options.repeat--;
+                if (this.options.reverse === true)
+                {
+                    this.options.reverse = false;
+                }
+                else
+                {
+                    this.options.reverse--;
+                }
             }
-            else if (!this.options.repeat)
+            else
             {
-                this.options.reverse = false;
+                if (this.options.repeat !== true)
+                {
+                    this.options.repeat--;
+                }
             }
             if (this.options.onLoop)
             {
