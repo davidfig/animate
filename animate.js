@@ -464,7 +464,7 @@ class AnimateBase
         {
             if (this.options.onDone)
             {
-                this.options.onDone(this.object);
+                this.options.onDone(this.object, leftOver);
             }
             this.object = null;
             this.options = null;
