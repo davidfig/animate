@@ -505,7 +505,7 @@ class AnimateBase
             this.options.wait -= elapsed;
             if (this.options.wait < 0)
             {
-                elapsed += this.options.wait;
+                elapsed = -this.options.wait;
                 this.options.wait = false;
             }
             else
