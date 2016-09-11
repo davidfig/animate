@@ -512,7 +512,7 @@ class AnimateBase
             {
                 if (this.options.onWait)
                 {
-                    this.options.onWait(this.object);
+                    this.options.onWait(elapsed, this.object);
                 }
                 return;
             }
