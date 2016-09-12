@@ -13,13 +13,15 @@ var Animate = {
     /**
      * @param {object=} options
      * @param {boolean} options.noUpdate - do not add to Update queue (use only if Animate.update() will be called manually)
+     * @param {boolean} options.debug - add a debug panel
      */
     init: function(options)
     {
         options = options || {};
         if (!options.noUpdate)
         {
-            Update.add(Animate.update);
+            var opts = (options.debug) ? {percent: 'Animate'} : null;
+            Update.add(Animate.update, opts);
         }
     },
 
