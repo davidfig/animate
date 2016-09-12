@@ -85,6 +85,29 @@ var Animate = {
     },
 
     /**
+     * add an empty animation (good for timers in sync with animate loop)
+     * @param {object} object to animate
+     * @param {number} duration - time to run (use 0 for infinite duration--should only be used with customized easing functions)
+     * @param {object=} options
+     * @param {number=} options.wait n milliseconds before starting animation (can also be used to pause animation for a length of time)
+     * @param {Renderer=} options.renderer - sets Renderer.dirty for each loop
+     * @param {boolean=} options.pause - start the animation paused
+     * @param {boolean|number=} options.repeat - true = repeat animation forever; n = repeat animation n times
+     * @param {boolean|number=} options.reverse - true = reverse animation (if combined with repeat, then pulse); n = reverse animation n times
+     * @param {boolean|number=} options.continue - true = continue animation with new starting values; n = continue animation n times
+     * @param {function=} options.onDone - function pointer for when the animation expires
+     * @param {function=} options.onCancel - function pointer called after cancelled
+     * @param {function=} options.onWait - function pointer for wait
+     * @param {function=} options.onFirst - function pointer for first time update is called (does not include pause or wait time)
+     * @param {function=} options.onEach - function pointer called after each update
+     * @param {function=} options.onLoop - function pointer called after a revere, repeat, or continue
+     */
+    wait: function(object, duration, options)
+    {
+        return new AnimateBase(object, options);
+    },
+
+    /**
      * move to a target
      * @param {PIXI.DisplayObject} object - object to animate
      * @param {PIXI.DisplayObject|PIXI.Point} target (should have a .x and .y parameter)
@@ -561,6 +584,8 @@ class AnimateBase
         }
         return value;
     }
+
+    calculate() {}
 }
 
 class AnimateTo extends AnimateBase
