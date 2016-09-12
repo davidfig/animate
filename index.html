@@ -43,8 +43,8 @@
 
         // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
         Debug.init();
-        Update.init({debug: true});
-        Animate.init();
+        Update.init({debug: true, FPS: true, percent: true});
+        Animate.init({debug: true});
 
         // set up pixi and shapes
         var renderer, red, green, blue, shaker, theDots = [], theDotsScale, pacman;
@@ -79,6 +79,13 @@
                     .lineStyle(pacman.radius, 0xffff00)
                     .arc(0, 0, pacman.radius / 2, Math.PI * pacman.angle, Math.PI * -pacman.angle, false);
             }, repeat: true, reverse: true});
+
+        var count = 0;
+        Animate.wait(null, 1000, {repeat: true, onLoop:
+            function()
+            {
+                debugOne('This should change every 1s (' + count++ + ')');
+            }})
 
         // pacman walking animation
         function nextTarget()
