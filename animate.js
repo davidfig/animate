@@ -106,7 +106,9 @@ var Animate = {
      */
     wait: function(object, duration, options)
     {
-        return new AnimateBase(object, options);
+        var wait = new AnimateBase(object, options);
+        wait.duration = duration;
+        return wait;
     },
 
     /**
