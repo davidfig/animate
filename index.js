@@ -2,8 +2,7 @@ const PIXI = require('pixi.js');
 const Debug = require('yy-debug');
 const Update = require('yy-update');
 const Animate = require('yy-animate');
-// const Renderer = require('@yy/renderer');
-const Renderer = require('../renderer/renderer.js');
+const Renderer = require('yy-renderer');
 const Easing = require('penner');
 
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
