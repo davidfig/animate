@@ -49,7 +49,7 @@ class To extends Wait
         }
         this.goto = goto;
         this.duration = duration;
-        this.ease = options.ease || this.noEase;
+        this.ease = this.options.ease || this.noEase;
         this.restart();
     }
 

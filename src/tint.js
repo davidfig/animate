@@ -21,7 +21,7 @@ class Tint extends Wait
     {
         super(object, options);
         this.duration = duration;
-        this.ease = options.ease || this.noEase;
+        this.ease = this.options.ease || this.noEase;
         const start = this.start = this.toRGB(object.tint);
         const to = this.to = this.toRGB(tint);
         this.delta = {r: to.r - start.r, g: to.g - start.g, b: to.b - start.b};
