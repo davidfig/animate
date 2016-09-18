@@ -60,6 +60,10 @@ function add(animate)
     return animate;
 }
 
+/**
+ * update function (can be called manually or called internally by {@link init})
+ * @param {number} elapsed since last update
+ */
 function update(elapsed)
 {
     for (var i = list.length - 1; i >= 0; i--)

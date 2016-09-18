@@ -4,7 +4,8 @@
   "description": "Javascript animation library for use with PIXI.js",
   "main": "animate.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "node_modules/.bin/jsdoc2md --template README.hbs animate.js src/*.js > README.md"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/davidfig/animate#readme",
   "dependencies": {
     "yy-angle": "^1.0.1"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^1.3.7"
   }
 }
