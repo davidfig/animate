@@ -1,0 +1,33 @@
+{
+  "name": "animatedemo",
+  "version": "1.0.0",
+  "description": "debug panels for javascript (designed for game development)",
+  "main": "index.js",
+  "dependencies": {
+    "browserify": "^13.1.0",
+    "highlight.js": "^9.6.0",
+    "penner": "^0.1.3",
+    "pixi.js": "^4.0.1",
+    "yy-angle": "^1.0.0",
+    "yy-animate": "^1.0.0",
+    "yy-debug": "^1.0.0",
+    "yy-renderer": "^1.0.0",
+    "yy-update": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "browserify *.js -u index.compiled.js > index.compiled.js",
+    "watch": "watchify *.js -u index.compiled.js -vo index.compiled.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidfig/animate.git"
+  },
+  "author": "David Figatner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidfig/animate/issues"
+  },
+  "homepage": "https://github.com/davidfig/animate#readme"
+}
