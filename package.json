@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/davidfig/animate/issues"
   },
-  "homepage": "https://github.com/davidfig/animate#readme"
+  "homepage": "https://github.com/davidfig/animate#readme",
+  "dependencies": {
+    "yy-angle": "^1.0.1"
+  }
 }
