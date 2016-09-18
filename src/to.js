@@ -39,7 +39,7 @@ class To extends Wait
      * @param {Function} [options.onEach] function pointer called after each update
      * @param {Function} [options.onLoop] function pointer called after a revere, repeat, or continue
      */
-    constructor(object, goto, duration, options, ease)
+    constructor(object, goto, duration, options)
     {
         super(object, options);
         if (Array.isArray(object))
@@ -49,7 +49,7 @@ class To extends Wait
         }
         this.goto = goto;
         this.duration = duration;
-        this.ease = ease || this.noEase;
+        this.ease = options.ease || this.noEase;
         this.restart();
     }
 
