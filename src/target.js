@@ -8,10 +8,7 @@
 
 const Wait = require('./wait.js');
 
-/**
- * @description
- * move an object to a target
- */
+/** move an object to a target's location */
 class Target extends Wait
 {
     /**

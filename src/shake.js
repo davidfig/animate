@@ -8,9 +8,7 @@
 
 const Wait = require('./wait.js');
 
-/**
- * @extends Wait
- */
+/** shakes an object */
 class Shake extends Wait
 {
     constructor(object, amount, duration, options)

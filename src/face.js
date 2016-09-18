@@ -9,10 +9,7 @@
 const Angle = require('yy-angle');
 const Wait = require('./wait.js');
 
-/**
- * @description
- * Animates rotation of object to face the target
- */
+/** Rotates an object to face the target */
 class Face extends Wait
 {
     /**

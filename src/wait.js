@@ -8,9 +8,7 @@
 
 const Add = require('./animate.js').add;
 
-/**
- * basic animation, use options.wait to wait for a certain time
- */
+/** base class for all animations */
 class Wait
 {
     /**

@@ -8,6 +8,7 @@
 
 const Wait = require('./wait.js');
 
+/** changes the tint of an object */
 class Tint extends Wait
 {
     /**

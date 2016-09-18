@@ -13,20 +13,25 @@ https://davidfig.github.io/animate/
 
 <dl>
 <dt><a href="#Angle">Angle</a></dt>
-<dd><p>move object at an angle</p>
+<dd><p>animate object&#39;s {x, y} using an angle</p>
 </dd>
 <dt><a href="#Face">Face</a></dt>
-<dd></dd>
-<dt><a href="#Shake">Shake</a> ⇐ <code><a href="#Wait">Wait</a></code></dt>
-<dd></dd>
+<dd><p>Rotates an object to face the target</p>
+</dd>
+<dt><a href="#Shake">Shake</a></dt>
+<dd><p>shakes an object</p>
+</dd>
 <dt><a href="#Target">Target</a></dt>
-<dd></dd>
+<dd><p>move an object to a target&#39;s location</p>
+</dd>
 <dt><a href="#Tint">Tint</a></dt>
-<dd></dd>
+<dd><p>changes the tint of an object</p>
+</dd>
 <dt><a href="#To">To</a></dt>
-<dd></dd>
+<dd><p>animate any numeric parameter of an object or array of objects</p>
+</dd>
 <dt><a href="#Wait">Wait</a></dt>
-<dd><p>basic animation, use options.wait to wait for a certain time</p>
+<dd><p>base class for all animations</p>
 </dd>
 </dl>
 
@@ -47,7 +52,7 @@ https://davidfig.github.io/animate/
 <a name="Angle"></a>
 
 ## Angle
-move object at an angle
+animate object's {x, y} using an angle
 
 **Kind**: global class  
 <a name="new_Angle_new"></a>
@@ -65,12 +70,12 @@ move object at an angle
 <a name="Face"></a>
 
 ## Face
+Rotates an object to face the target
+
 **Kind**: global class  
 <a name="new_Face_new"></a>
 
 ### new Face(object, target, speed, [options])
-Animates rotation of object to face the target
-
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -81,17 +86,20 @@ Animates rotation of object to face the target
 
 <a name="Shake"></a>
 
-## Shake ⇐ <code>[Wait](#Wait)</code>
+## Shake
+shakes an object
+
 **Kind**: global class  
-**Extends:** <code>[Wait](#Wait)</code>  
 <a name="Target"></a>
 
 ## Target
+move an object to a target's location
+
 **Kind**: global class  
 <a name="new_Target_new"></a>
 
 ### new Target(object, target, speed, [options])
-move an object to a target
+move to a target
 
 
 | Param | Type | Description |
@@ -105,6 +113,8 @@ move an object to a target
 <a name="Tint"></a>
 
 ## Tint
+changes the tint of an object
+
 **Kind**: global class  
 <a name="new_Tint_new"></a>
 
@@ -120,8 +130,9 @@ move an object to a target
 <a name="To"></a>
 
 ## To
+animate any numeric parameter of an object or array of objects
+
 **Kind**: global class  
-**Summary**: animate any numeric parameter of an object or array of objects  
 **Examples**: // animate sprite to (20, 20) over 1s using easeInOuTsine, and then reverse the animation
 new Animate.to(sprite, {x: 20, y: 20}, 1000, {reverse: true, ease: Easing.easeInOutSine});
 
@@ -154,7 +165,7 @@ new Animate.to([sprite1, sprite2, sprite3], {scale: {x: 0.25, y: 0.25}}, 10000, 
 <a name="Wait"></a>
 
 ## Wait
-basic animation, use options.wait to wait for a certain time
+base class for all animations
 
 **Kind**: global class  
 <a name="new_Wait_new"></a>

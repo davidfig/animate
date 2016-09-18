@@ -9,7 +9,6 @@
 const Wait = require('./wait.js');
 
 /**
- * @summary
  * animate any numeric parameter of an object or array of objects
  * @examples
  *

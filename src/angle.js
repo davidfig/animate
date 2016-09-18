@@ -8,9 +8,7 @@
 
 const Wait = require('./wait.js');
 
-/**
- * move object at an angle
- */
+/** animate object's {x, y} using an angle */
 class Angle extends Wait
 {
     /**
