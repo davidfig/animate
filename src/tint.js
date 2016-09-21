@@ -37,7 +37,7 @@ class Tint extends Wait
 
     reverse()
     {
-        const swap = this.start;
+        const swap = this.to;
         this.to = this.start;
         this.start = swap;
         this.delta.r *= -1;
