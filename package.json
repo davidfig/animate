@@ -10,6 +10,7 @@
     "pixi.js": "^4.0.1",
     "yy-angle": "^1.0.0",
     "yy-animate": "^1.0.0",
+    "yy-color": "^1.0.0",
     "yy-debug": "^1.0.0",
     "yy-renderer": "^1.0.0",
     "yy-update": "^1.0.0"
