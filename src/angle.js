@@ -21,15 +21,20 @@ class Angle extends Wait
     constructor(object, angle, speed, duration, options)
     {
         super(object, options);
-        this.change(angle);
+        this.angle = angle;
         this.speed = speed;
         this.duration = duration || 0;
     }
 
-    change(angle)
+    get angle()
     {
-        this.sin = Math.sin(angle);
-        this.cos = Math.cos(angle);
+        return this._angle;
+    }
+    set angle(value)
+    {
+        this._angle = value;
+        this.sin = Math.sin(this._angle);
+        this.cos = Math.cos(this._angle);
     }
 
     calculate(elapsed)
