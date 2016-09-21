@@ -19,9 +19,12 @@ window.onload = function()
 const PIXI = require('pixi.js');
 const Debug = require('yy-debug');
 const Update = require('yy-update');
-const Animate = require('yy-animate');
 const Renderer = require('yy-renderer');
 const Easing = require('penner');
+const Animate = require('yy-animate');
+
+// for local testing
+// const Animate = require('../animate/animate.js');
 
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
 Debug.init();
@@ -49,7 +52,7 @@ new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 // circle changes from blue to red and reverse and repeats
 new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
-// circle also shakes forever, it starts after 1 second
+// circle shakes forever, it starts after 1 second
 new Animate.shake(shaker, 5, 0, {repeat: true, wait: 1000});
 
 // animate a group that is not a container
