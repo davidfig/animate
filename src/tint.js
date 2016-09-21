@@ -6,6 +6,7 @@
  * {@link https://github.com/davidfig/animate}
  */
 
+const Color = require('yy-color');
 const Wait = require('./wait.js');
 
 /** changes the tint of an object */
@@ -22,17 +23,14 @@ class Tint extends Wait
         super(object, options);
         this.duration = duration;
         this.ease = this.options.ease || this.noEase;
-        const start = this.start = this.toRGB(object.tint);
-        const to = this.to = this.toRGB(tint);
-        this.delta = {r: to.r - start.r, g: to.g - start.g, b: to.b - start.b};
+        this.start = object.tint;
+        this.to = tint;
     }
 
     calculate(/* elapsed */)
     {
         const percent = this.ease(this.time, 0, 1, this.duration);
-        const start = this.start;
-        const delta = this.delta;
-        this.object.tint = this.toHex({r: start.r + delta.r * percent, g: start.g + delta.g * percent, b: start.b + delta.b * percent});
+        this.object.tint = Color.blend(percent, this.start, this.to);
     }
 
     reverse()
@@ -40,25 +38,7 @@ class Tint extends Wait
         const swap = this.to;
         this.to = this.start;
         this.start = swap;
-        this.delta.r *= -1;
-        this.delta.g *= -1;
-        this.delta.b *= -1;
     }
-
-    toRGB(hex)
-    {
-        var r = hex >> 16;
-        var g = hex >> 8 & 0x0000ff;
-        var b = hex & 0x0000ff;
-        return {r: r, g: g, b: b};
-    }
-
-    toHex(rgb)
-    {
-        return rgb.r << 16 | rgb.g << 8 | rgb.b;
-    }
-
-
 }
 
 module.exports = Tint;
