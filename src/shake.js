@@ -16,6 +16,7 @@ class Shake extends Wait
         super(object, options);
         this.start = {x: object.x, y: object.y};
         this.amount = amount;
+        this.duration = duration;
     }
 
     calculate(/*elapsed*/)
