@@ -3,7 +3,7 @@ const Debug = require('yy-debug');
 const Update = require('yy-update');
 const Renderer = require('yy-renderer');
 const Easing = require('penner');
-const Animate = require('yy-animate');
+const Animate = require('../animate/animate.js');
 
 // for local testing
 // const Animate = require('../animate/animate.js');
@@ -35,7 +35,7 @@ new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
 // circle shakes forever, it starts after 1 second
-new Animate.shake(shaker, 5, 0, {repeat: true, wait: 1000});
+new Animate.shake(shaker, 5, 0, {wait: 1000});
 
 // animate a group that is not a container
 new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});
@@ -94,7 +94,7 @@ var angleAnimate = new Animate.angle(circleAngle, Math.random(), 0.1, 0, {onEach
         if (circleAngle.x > window.innerWidth || circleAngle.x < 0 || circleAngle.y > window.innerHeight || circleAngle.y < 0)
         {
             circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-            angleAnimate.change(Math.random() * Math.PI * 2);
+            angleAnimate.angle = Math.random() * Math.PI * 2;
         }
     }});
 

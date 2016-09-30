@@ -15,11 +15,14 @@
     "yy-renderer": "^1.0.0",
     "yy-update": "^1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "uglify-js": "^2.7.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "browserify *.js -u index.compiled.js > index.compiled.js",
-    "watch": "watchify *.js -u index.compiled.js -vo index.compiled.js"
+    "watch": "watchify *.js -u index.compiled.js -vo index.compiled.js",
+    "compress": "browserify *.js -u index.compiled.js | node_modules/.bin/uglifyjs -mc > index.compiled.js"
   },
   "repository": {
     "type": "git",
