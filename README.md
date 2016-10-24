@@ -19,7 +19,7 @@ https://davidfig.github.io/animate/
 <dd><p>Rotates an object to face the target</p>
 </dd>
 <dt><a href="#Shake">Shake</a></dt>
-<dd><p>shakes an object</p>
+<dd><p>shakes an object or list of objects</p>
 </dd>
 <dt><a href="#Target">Target</a></dt>
 <dd><p>move an object to a target&#39;s location</p>
@@ -87,9 +87,20 @@ Rotates an object to face the target
 <a name="Shake"></a>
 
 ## Shake
-shakes an object
+shakes an object or list of objects
 
 **Kind**: global class  
+<a name="new_Shake_new"></a>
+
+### new Shake(object, amount, duration, options)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| object | <code>object</code> &#124; <code>array</code> | or list of objects to shake |
+| amount | <code>number</code> | to shake |
+| duration | <code>number</code> | (in milliseconds) to shake |
+| options | <code>object</code> | (see Animate.wait) |
+
 <a name="Target"></a>
 
 ## Target
