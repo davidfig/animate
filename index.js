@@ -34,8 +34,8 @@ new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 // circle changes from blue to red and reverse and repeats
 new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
-// circle shakes forever, it starts after 1 second
-new Animate.shake(shaker, 5, 0, {wait: 1000});
+// circle shakes forever, it starts after 1 second (also testing array of objects)
+new Animate.shake([shaker], 5, 0, {wait: 1000});
 
 // animate a group that is not a container
 new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});

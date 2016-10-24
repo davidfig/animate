@@ -1206,7 +1206,21 @@ class Shake extends Wait
     constructor(object, amount, duration, options)
     {
         super(object, options);
-        this.start = {x: object.x, y: object.y};
+        if (Array.isArray(object))
+        {
+            this.array = true;
+            this.list = object;
+            this.start = [];
+            for (let i = 0, count = object.length; i < count; i++)
+            {
+                const target = object[i];
+                this.start[i] = {x: target.x, y: target.y};
+            }
+        }
+        else
+        {
+            this.start = {x: object.x, y: object.y};
+        }
         this.amount = amount;
         this.duration = duration;
     }
@@ -1216,6 +1230,17 @@ class Shake extends Wait
         const object = this.object;
         const start = this.start;
         const amount = this.amount;
+        if (this.array)
+        {
+            const list = this.list;
+            for (let i = 0, count = list.length; i < count; i++)
+            {
+                const object = list[i];
+                const actual = start[i];
+                object.x = actual.x + Math.floor(Math.random() * amount * 2) - amount;
+                object.y = actual.y + Math.floor(Math.random() * amount * 2) - amount;
+            }
+        }
         object.x = start.x + Math.floor(Math.random() * amount * 2) - amount;
         object.y = start.y + Math.floor(Math.random() * amount * 2) - amount;
     }
@@ -1224,8 +1249,22 @@ class Shake extends Wait
     {
         const object = this.object;
         const start = this.start;
-        object.x = start.x;
-        object.y = start.y;
+        if (this.array)
+        {
+            const list = this.list;
+            for (let i = 0, count = list.length; i < count; i++)
+            {
+                const object = list[i];
+                const actual = start[i];
+                object.x = actual.x;
+                object.y = actual.y;
+            }
+        }
+        else
+        {
+            object.x = start.x;
+            object.y = start.y;
+        }
     }
 }
 
@@ -1805,8 +1844,8 @@ new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 // circle changes from blue to red and reverse and repeats
 new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
-// circle shakes forever, it starts after 1 second
-new Animate.shake(shaker, 5, 0, {wait: 1000});
+// circle shakes forever, it starts after 1 second (also testing array of objects)
+new Animate.shake([shaker], 5, 0, {wait: 1000});
 
 // animate a group that is not a container
 new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});
