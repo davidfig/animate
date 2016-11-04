@@ -149,10 +149,10 @@ animate any numeric parameter of an object or array of objects
 
 **Kind**: global class  
 **Examples**: // animate sprite to (20, 20) over 1s using easeInOuTsine, and then reverse the animation
-new Animate.to(sprite, {x: 20, y: 20}, 1000, {reverse: true, ease: Easing.easeInOutSine});
+   new Animate.to(sprite, {x: 20, y: 20}, 1000, {reverse: true, ease: Easing.easeInOutSine});
 
-// animate list of sprites to a scale over 10s after waiting 1s
-new Animate.to([sprite1, sprite2, sprite3], {scale: {x: 0.25, y: 0.25}}, 10000, {wait: 1000});  
+   // animate list of sprites to a scale over 10s after waiting 1s
+   new Animate.to([sprite1, sprite2, sprite3], {scale: {x: 0.25, y: 0.25}}, 10000, {wait: 1000});  
 <a name="new_To_new"></a>
 
 ### new To(object, goto, [duration], [options])
