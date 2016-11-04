@@ -1,5 +1,5 @@
 ## animate.js
-yet another javascript animation library (designed specifically for games)
+yet another javascript animation library (designed specifically for games and PIXI.js)
 
 ## Live Example
 https://davidfig.github.io/animate/
