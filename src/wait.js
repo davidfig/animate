@@ -173,7 +173,6 @@ class Wait
                 this.options.onDone(this.list || this.object, leftOver);
             }
             this.list = this.object = null;
-            this.options = null;
             return true;
         }
     }
