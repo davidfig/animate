@@ -69,6 +69,10 @@ class Wait
         {
             save.continue = options.continue;
         }
+        if (options.cancel)
+        {
+            save.cancel = options.cancel;
+        }
         return save;
     }
 
@@ -79,6 +83,7 @@ class Wait
         this.options.repeat = load.repeat;
         this.options.reverse = load.reverse;
         this.options.continue = load.continue;
+        this.options.cancel = load.cancel;
         this.time = load.time;
         this.duration = load.duration;
     }
