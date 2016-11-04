@@ -17,12 +17,37 @@ class Face extends Wait
      * @param {Point} target
      * @param {number} speed in radians/millisecond
      * @param {object} [options] @see {@link Wait}
+     * @param {boolean} [options.keepAlive] don't stop animation when complete
      */
     constructor(object, target, speed, options)
     {
+        options = options || {};
         super(object, options);
+        this.type = 'Face';
         this.target = target;
-        this.speed = speed;
+        if (options.load)
+        {
+            this.load(options.load);
+        }
+        else
+        {
+            this.speed = speed;
+        }
+    }
+
+    save()
+    {
+        const save = super.save();
+        save.speed = this.speed;
+        save.keepAlive = this.options.keepAlive;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.speed = load.speed;
+        this.options.keepAlive = load.keepAlive;
     }
 
     calculate(elapsed)

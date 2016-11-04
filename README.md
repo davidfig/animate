@@ -47,6 +47,9 @@ https://davidfig.github.io/animate/
 <dt><a href="#update">update(elapsed)</a></dt>
 <dd><p>update function (can be called manually or called internally by <a href="#init">init</a>)</p>
 </dd>
+<dt><a href="#load">load(object(s), load, [options])</a></dt>
+<dd><p>restart an animation from a saved state</p>
+</dd>
 </dl>
 
 <a name="Angle"></a>
@@ -83,6 +86,7 @@ Rotates an object to face the target
 | target | <code>Point</code> |  |
 | speed | <code>number</code> | in radians/millisecond |
 | [options] | <code>object</code> | @see [Wait](#Wait) |
+| [options.keepAlive] | <code>boolean</code> | don't stop animation when complete |
 
 <a name="Shake"></a>
 
@@ -160,18 +164,19 @@ new Animate.to([sprite1, sprite2, sprite3], {scale: {x: 0.25, y: 0.25}}, 10000, 
 | [duration] | <code>number</code> | <code>0</code> | time to run (use 0 for infinite duration--should only be used with customized easing functions) |
 | [options] | <code>object</code> |  |  |
 | [options.wait] | <code>number</code> | <code>0</code> | n milliseconds before starting animation (can also be used to pause animation for a length of time) |
-| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples) |
-| [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop |
 | [options.pause] | <code>boolean</code> |  | start the animation paused |
 | [options.repeat] | <code>boolean</code> &#124; <code>number</code> |  | true: repeat animation forever; n: repeat animation n times |
 | [options.reverse] | <code>boolean</code> &#124; <code>number</code> |  | true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times |
 | [options.continue] | <code>boolean</code> &#124; <code>number</code> |  | true: continue animation with new starting values; n: continue animation n times |
-| [options.onDone] | <code>function</code> |  | function pointer for when the animation expires |
-| [options.onCancel] | <code>function</code> |  | function pointer called after cancelled |
-| [options.onWait] | <code>function</code> |  | function pointer for wait |
-| [options.onFirst] | <code>function</code> |  | function pointer for first time update is called (does not include pause or wait time) |
-| [options.onEach] | <code>function</code> |  | function pointer called after each update |
-| [options.onLoop] | <code>function</code> |  | function pointer called after a revere, repeat, or continue |
+| [options.load] | <code>function</code> |  | loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set |
+| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples)* |
+| [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop* |
+| [options.onDone] | <code>function</code> |  | function pointer for when the animation expires* |
+| [options.onCancel] | <code>function</code> |  | function pointer called after cancelled* |
+| [options.onWait] | <code>function</code> |  | function pointer for wait* |
+| [options.onFirst] | <code>function</code> |  | function pointer for first time update is called (does not include pause or wait time)* |
+| [options.onEach] | <code>function</code> |  | function pointer called after each update* |
+| [options.onLoop] | <code>function</code> |  | function pointer called after a revere, repeat, or continue* |
 
 <a name="Wait"></a>
 
@@ -188,18 +193,19 @@ base class for all animations
 | object | <code>object</code> |  | to animate |
 | [options] | <code>object</code> |  |  |
 | [options.wait] | <code>number</code> | <code>0</code> | n milliseconds before starting animation (can also be used to pause animation for a length of time) |
-| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples) |
-| [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop |
 | [options.pause] | <code>boolean</code> |  | start the animation paused |
 | [options.repeat] | <code>boolean</code> &#124; <code>number</code> |  | true: repeat animation forever; n: repeat animation n times |
 | [options.reverse] | <code>boolean</code> &#124; <code>number</code> |  | true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times |
 | [options.continue] | <code>boolean</code> &#124; <code>number</code> |  | true: continue animation with new starting values; n: continue animation n times |
-| [options.onDone] | <code>function</code> |  | function pointer for when the animation expires |
-| [options.onCancel] | <code>function</code> |  | function pointer called after cancelled |
-| [options.onWait] | <code>function</code> |  | function pointer for wait |
-| [options.onFirst] | <code>function</code> |  | function pointer for first time update is called (does not include pause or wait time) |
-| [options.onEach] | <code>function</code> |  | function pointer called after each update |
-| [options.onLoop] | <code>function</code> |  | function pointer called after a revere, repeat, or continue |
+| [options.load] | <code>function</code> |  | loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set |
+| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples)* |
+| [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop* |
+| [options.onDone] | <code>function</code> |  | function pointer for when the animation expires* |
+| [options.onCancel] | <code>function</code> |  | function pointer called after cancelled* |
+| [options.onWait] | <code>function</code> |  | function pointer for wait* |
+| [options.onFirst] | <code>function</code> |  | function pointer for first time update is called (does not include pause or wait time)* |
+| [options.onEach] | <code>function</code> |  | function pointer called after each update* |
+| [options.onLoop] | <code>function</code> |  | function pointer called after a revere, repeat, or continue* |
 
 <a name="init"></a>
 
@@ -235,6 +241,19 @@ update function (can be called manually or called internally by [init](#init))
 | Param | Type | Description |
 | --- | --- | --- |
 | elapsed | <code>number</code> | since last update |
+
+<a name="load"></a>
+
+## load(object(s), load, [options])
+restart an animation from a saved state
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| object(s) | <code>object</code> | to animate (cannot be saved) |
+| load | <code>object</code> | object from .save() |
+| [options] | <code>object</code> | include any additional options that cannot be saved (e.g., onDone function pointer) |
 
 
 * * *

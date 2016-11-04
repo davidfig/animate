@@ -10,6 +10,7 @@ module.exports = {
     init: require('./src/animate.js').init,
     remove: require('./src/animate.js').remove,
     update: require('./src/animate.js').update,
+    load: require('./src/load.js'),
 
     wait: require('./src/wait.js'),
     to: require('./src/to.js'),

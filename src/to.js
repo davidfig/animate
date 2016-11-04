@@ -26,31 +26,60 @@ class To extends Wait
      * @param {number} [duration=0] - time to run (use 0 for infinite duration--should only be used with customized easing functions)
      * @param {object} [options]
      * @param {number} [options.wait=0] n milliseconds before starting animation (can also be used to pause animation for a length of time)
-     * @param {Function} [options.ease] function from easing.js (see http://easings.net for examples)
-     * @param {Renderer} [options.renderer] sets Renderer.dirty for each loop
      * @param {boolean} [options.pause] start the animation paused
      * @param {(boolean|number)} [options.repeat] true: repeat animation forever; n: repeat animation n times
      * @param {(boolean|number)} [options.reverse] true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times
      * @param {(boolean|number)} [options.continue] true: continue animation with new starting values; n: continue animation n times
-     * @param {Function} [options.onDone] function pointer for when the animation expires
-     * @param {Function} [options.onCancel] function pointer called after cancelled
-     * @param {Function} [options.onWait] function pointer for wait
-     * @param {Function} [options.onFirst] function pointer for first time update is called (does not include pause or wait time)
-     * @param {Function} [options.onEach] function pointer called after each update
-     * @param {Function} [options.onLoop] function pointer called after a revere, repeat, or continue
+     * @param {Function} [options.load] loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set
+     * @param {Function} [options.ease] function from easing.js (see http://easings.net for examples)*
+     * @param {Renderer} [options.renderer] sets Renderer.dirty for each loop*
+     * @param {Function} [options.onDone] function pointer for when the animation expires*
+     * @param {Function} [options.onCancel] function pointer called after cancelled*
+     * @param {Function} [options.onWait] function pointer for wait*
+     * @param {Function} [options.onFirst] function pointer for first time update is called (does not include pause or wait time)*
+     * @param {Function} [options.onEach] function pointer called after each update*
+     * @param {Function} [options.onLoop] function pointer called after a revere, repeat, or continue*
      */
     constructor(object, goto, duration, options)
     {
+        options = options || {};
         super(object, options);
+        this.type = 'To';
         if (Array.isArray(object))
         {
             this.list = object;
             this.object = this.list[0];
         }
-        this.goto = goto;
-        this.duration = duration;
-        this.ease = this.options.ease || this.noEase;
-        this.restart();
+        this.ease = options.ease || this.noEase;
+        if (options.load)
+        {
+            this.load(options.load);
+        }
+        else
+        {
+            this.goto = goto;
+            this.duration = duration;
+            this.restart();
+        }
+    }
+
+    save()
+    {
+        const save = super.save();
+        save.goto = this.goto;
+        save.start = this.start;
+        save.delta = this.delta;
+        save.keys = this.keys;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.goto = load.goto;
+        this.start = load.start;
+        this.delta = load.delta;
+        this.keys = load.keys;
     }
 
     restart()

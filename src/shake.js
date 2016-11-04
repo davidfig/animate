@@ -21,24 +21,51 @@ class Shake extends Wait
      */
     constructor(object, amount, duration, options)
     {
+        options = options || {};
         super(object, options);
+        this.type = 'Shake';
         if (Array.isArray(object))
         {
             this.array = true;
             this.list = object;
-            this.start = [];
-            for (let i = 0, count = object.length; i < count; i++)
-            {
-                const target = object[i];
-                this.start[i] = {x: target.x, y: target.y};
-            }
+        }
+        if (options.load)
+        {
+            this.load(options.load);
         }
         else
         {
-            this.start = {x: object.x, y: object.y};
+            if (this.list)
+            {
+                this.start = [];
+                for (let i = 0, count = object.length; i < count; i++)
+                {
+                    const target = object[i];
+                    this.start[i] = {x: target.x, y: target.y};
+                }
+            }
+            else
+            {
+                this.start = {x: object.x, y: object.y};
+            }
+            this.amount = amount;
+            this.duration = duration;
         }
-        this.amount = amount;
-        this.duration = duration;
+    }
+
+    save()
+    {
+        const save = super.save();
+        save.start = this.start;
+        save.amount = this.amount;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.start = load.start;
+        this.amount = load.amount;
     }
 
     calculate(/*elapsed*/)

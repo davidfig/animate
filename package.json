@@ -1,6 +1,6 @@
 {
   "name": "yy-animate",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Javascript animation library for use with PIXI.js",
   "main": "animate.js",
   "scripts": {

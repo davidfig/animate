@@ -21,14 +21,34 @@ class Target extends Wait
      */
     constructor(object, target, speed, options)
     {
+        options = options || {};
         super(object, options);
+        this.type = 'Target';
         this.target = target;
-        this.speed = speed;
+        if (options.load)
+        {
+            this.load(options.load);
+        }
+        else
+        {
+            this.speed = speed;
+        }
     }
 
-    // TODO
-    reverse() {}
-    continue() {}
+    save()
+    {
+        const save = super.save();
+        save.speed = this.speed;
+        save.keepAlive = this.options.keepAlive;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.speed = load.speed;
+        this.options.keepAlive = load.keepAlive;
+    }
 
     calculate(elapsed)
     {

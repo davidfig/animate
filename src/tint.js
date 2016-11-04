@@ -20,11 +20,35 @@ class Tint extends Wait
      */
     constructor(object, tint, duration, options)
     {
+        options = options || {};
         super(object, options);
+        this.type = 'Tint';
         this.duration = duration;
         this.ease = this.options.ease || this.noEase;
-        this.start = object.tint;
-        this.to = tint;
+        if (options.load)
+        {
+            this.load(options.load);
+        }
+        else
+        {
+            this.start = object.tint;
+            this.to = tint;
+        }
+    }
+
+    save()
+    {
+        const save = super.save();
+        save.start = this.start;
+        save.to = this.to;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.start = load.start;
+        this.to = load.to;
     }
 
     calculate(/* elapsed */)

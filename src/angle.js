@@ -20,10 +20,34 @@ class Angle extends Wait
      */
     constructor(object, angle, speed, duration, options)
     {
+        options = options || {};
         super(object, options);
-        this.angle = angle;
-        this.speed = speed;
-        this.duration = duration || 0;
+        this.type = 'Angle';
+        if (options.load)
+        {
+            this.load(options.load);
+        }
+        else
+        {
+            this.angle = angle;
+            this.speed = speed;
+            this.duration = duration || 0;
+        }
+    }
+
+    save()
+    {
+        const save = super.save();
+        save.angle = this.angle;
+        save.speed = this.speed;
+        return save;
+    }
+
+    load(load)
+    {
+        super.load(load);
+        this.angle = load.angle;
+        this.speed = load.speed;
     }
 
     get angle()
