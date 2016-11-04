@@ -5,9 +5,6 @@ const Renderer = require('yy-renderer');
 const Easing = require('penner');
 const Animate = require('../animate/animate.js');
 
-// for local testing
-// const Animate = require('../animate/animate.js');
-
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
 Debug.init();
 Update.init({debug: Debug, FPS: true, percent: true});
@@ -16,39 +13,40 @@ Update.init({debug: Debug, FPS: true, percent: true});
 Animate.init({update: Update, debug: Debug});
 
 // set up pixi and shapes
-var renderer, red, green, blue, shaker, theDots = [], pacman;
+let renderer, red, green, blue, shaker, pacman;
+const theDots = [], animates = [];
 pixi();
 
 // red triangle fades, moves, and scales; repeats and reverses forever
-// NOTE: the "renderer: renderer" option marks the renderer as dirty each update to ensure the page is redrawn
-new Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
-    {repeat: true, reverse: true, renderer: renderer, ease: Easing.easeInOutSine});
+animates[0] = new Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
+    {repeat: true, reverse: true, ease: Easing.easeInOutSine});
 
 // green triangle moves, rotates, and fades when done
 new Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
     {reverse: true, onDone: function (object) { new Animate.to(object, {alpha: 0}, 2000); }, ease: Easing.easeInSine});
 
 // blue triangle spins forever
-new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
+animates[1] = new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 
 // circle changes from blue to red and reverse and repeats
-new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
+animates[2] = new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
 // circle shakes forever, it starts after 1 second (also testing array of objects)
-new Animate.shake([shaker], 5, 0, {wait: 1000});
+animates[3] = new Animate.shake([shaker], 5, 0, {wait: 1000});
 
 // animate a group that is not a container
-new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});
+animates[4] = new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});
+
+function pacmanEach()
+{
+    pacman.clear()
+        .moveTo(Math.cos(pacman.angle) * pacman.radius / 2, Math.sin(pacman.angle) * pacman.radius / 2)
+        .lineStyle(pacman.radius, 0xffff00)
+        .arc(0, 0, pacman.radius / 2, Math.PI * pacman.angle, Math.PI * -pacman.angle, false);
+}
 
 // pacman mouth animation
-new Animate.to(pacman, {angle: 0.01}, 250, {onEach:
-    function()
-    {
-        pacman.clear()
-            .moveTo(Math.cos(pacman.angle) * pacman.radius / 2, Math.sin(pacman.angle) * pacman.radius / 2)
-            .lineStyle(pacman.radius, 0xffff00)
-            .arc(0, 0, pacman.radius / 2, Math.PI * pacman.angle, Math.PI * -pacman.angle, false);
-    }, repeat: true, reverse: true});
+new Animate.to(pacman, {angle: 0.01}, 250, {onEach: pacmanEach, repeat: true, reverse: true});
 
 var count = 0;
 new Animate.to(null, null, 1000, {repeat: true, onLoop:
@@ -65,44 +63,46 @@ function nextTarget()
 
     // rotate pacman around the short way to the target
     Animate.remove(rotate);
-    rotate = new Animate.face(pacman, target, 0.01, {ease: Easing.easeInOutSine});
+    rotate = new Animate.face(pacman, target, 0.01);
     return target;
 }
 
+
+function onDoneTarget()
+{
+    target = nextTarget();
+    animates[7].target = target;
+}
 let target = nextTarget();
-let walking = new Animate.target(pacman, target, 0.15, {keepAlive: true, onDone:
-    function()
-    {
-        walking.target = nextTarget();
-    }
-});
+animates[7] = new Animate.target(pacman, target, 0.15, {keepAlive: true, onDone: onDoneTarget});
 
 // pointer facing pacman
 var facing = pointer(100, 0x00ffff);
 facing.position.set(600, 400);
-new Animate.face(facing, pacman, 0.00075, {keepAlive: true});
+animates[6] = new Animate.face(facing, pacman, 0.00075, {keepAlive: true});
 
 // angle movement
+function onEachAngle()
+{
+    if (circleAngle.x > window.innerWidth || circleAngle.x < 0 || circleAngle.y > window.innerHeight || circleAngle.y < 0)
+    {
+        circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+        animates[5].angle = Math.random() * Math.PI * 2;
+    }
+}
+
 var circleAngle = renderer.add(PIXI.Sprite.fromImage('circle.png'));
 circleAngle.anchor.set(0.5);
 circleAngle.tint = 0xff00ff;
 circleAngle.width = circleAngle.height = 50;
 circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-var angleAnimate = new Animate.angle(circleAngle, Math.random(), 0.1, 0, {onEach:
-    function()
-    {
-        if (circleAngle.x > window.innerWidth || circleAngle.x < 0 || circleAngle.y > window.innerHeight || circleAngle.y < 0)
-        {
-            circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-            angleAnimate.angle = Math.random() * Math.PI * 2;
-        }
-    }});
+animates[5] = new Animate.angle(circleAngle, Math.random(), 0.1, 0, {onEach: onEachAngle});
 
 Update.update();
 
 function pixi()
 {
-    renderer = new Renderer({update: Update, debug: Debug, transparent: true, styles: {resize: true, background: green, pointerEvents: 'none'}});
+    renderer = new Renderer({update: Update, debug: Debug, transparent: true, alwaysRender: true, styles: {resize: true, background: green, pointerEvents: 'none'}});
     red = triangle(100, 0xff0000);
     red.position.set(50, 50);
     green = triangle(50, 0x00ff00);
@@ -170,5 +170,80 @@ function pacmanCreate(x, y, size)
     pacman.angle = 0.3;
 }
 
+// add a debug panel for instructions
+function instructions()
+{
+    function a(n)
+    {
+        return animates[n] ? '<span style="background: rgba(0,255,0,0.25)">save and cancel </span>' : '<span style="background: rgba(255,0,0,0.25)">load and resume </span>';
+    }
+    let s = '';
+    s += 'Press 1 to ' + a(0) + 'red triangle animation (.to)<br>';
+    s += 'Press 2 to ' + a(1) + 'blue triangle animation (.to)<br>';
+    s += 'Press 3 to ' + a(2) + 'red-to-blue circle animation (.tint)<br>';
+    s += 'Press 4 to ' + a(3) + 'shaking circle animation (.to)<br>';
+    s += 'Press 5 to ' + a(4) + 'lots of pink dots animation (.to with array)<br>';
+    s += 'Press 6 to ' + a(5) + 'pink circle animation (.angle)<br>';
+    s += 'Press 7 to ' + a(6) + 'pointer animation (.face)<br>';
+    s += 'Press 8 to ' + a(7) + 'pacman animation (.target)';
+
+    Debug.one(s, {panel: saveload});
+}
+const saveload = Debug.add('saveload', {side: 'leftbottom'});
+
+instructions();
+Debug.resize();
+
+const save = [];
+
+document.body.addEventListener('keypress',
+    function(e)
+    {
+        const code = (typeof e.which === 'number') ? e.which : e.keyCode;
+        if (code >= 49 && code < 49 + animates.length)
+        {
+            const i = code - 49;
+            if (animates[i])
+            {
+                save[i] = animates[i].save();
+                Animate.remove(animates[i]);
+                animates[i] = null;
+            }
+            else
+            {
+                switch (i)
+                {
+                case 0:
+                    animates[i] = Animate.load(red, save[i]);
+                    break;
+                case 1:
+                    animates[i] = Animate.load(blue, save[i]);
+                    break;
+                case 2:
+                    animates[i] = Animate.load(shaker, save[i]);
+                    break;
+                case 3:
+                    animates[i] = Animate.load([shaker], save[i]);
+                    break;
+                case 4:
+                    animates[i] = Animate.load(theDots, save[i]);
+                    break;
+                case 5:
+                    animates[i] = Animate.load(circleAngle, save[i], {onEach: onEachAngle});
+                    break;
+                case 6:
+                    animates[i] = Animate.load([facing, pacman], save[i]);
+                    break;
+                case 7:
+                    animates[i] = Animate.load([pacman, target], save[i], {onDone: onDoneTarget});
+                    break;
+                }
+            }
+            instructions();
+        }
+        else Debug.log(code, {panel: saveload});
+    }
+);
+
 // for eslint
-/* global window */
+/* global window, document */
