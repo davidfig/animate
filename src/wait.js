@@ -36,7 +36,7 @@ class Wait
         this.type = 'Wait';
         if (this.options.load)
         {
-            this.load(options.load);
+            this.load(this.options.load);
         }
         else
         {
