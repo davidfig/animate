@@ -37,6 +37,10 @@ class Face extends Wait
 
     save()
     {
+        if (this.options.cancel)
+        {
+            return null;
+        }
         const save = super.save();
         save.speed = this.speed;
         save.keepAlive = this.options.keepAlive;

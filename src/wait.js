@@ -47,6 +47,10 @@ class Wait
 
     save()
     {
+        if (this.options.cancel)
+        {
+            return null;
+        }
         const save = {type: this.type, time: this.time, duration: this.duration};
         const options = this.options;
         if (options.wait)

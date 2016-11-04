@@ -22,6 +22,10 @@ const Target = require('./target.js');
  */
 function load(object, load, options)
 {
+    if (!load)
+    {
+        return null;
+    }
     options = options || {};
     options.load = load;
     switch (load.type)

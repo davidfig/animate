@@ -38,6 +38,10 @@ class Tint extends Wait
 
     save()
     {
+        if (this.options.cancel)
+        {
+            return null;
+        }
         const save = super.save();
         save.start = this.start;
         save.to = this.to;

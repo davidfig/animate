@@ -65,6 +65,10 @@ class To extends Wait
 
     save()
     {
+        if (this.options.cancel)
+        {
+            return null;
+        }
         const save = super.save();
         save.goto = this.goto;
         save.start = this.start;
