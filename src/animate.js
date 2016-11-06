@@ -38,7 +38,7 @@ function remove(animate)
             while (animate.length)
             {
                 var pop = animate.pop();
-                if (pop.options)
+                if (pop && pop.options)
                 {
                     pop.options.cancel = true;
                 }
@@ -46,7 +46,7 @@ function remove(animate)
         }
         else
         {
-            if (animate.options)
+            if (animate && animate.options)
             {
                 animate.options.cancel = true;
             }
