@@ -88,39 +88,41 @@ class To extends Wait
 
     restart()
     {
-        var i = 0;
-        this.start = [];
-        this.delta = [];
-        this.keys = [];
+        let i = 0;
+        const start = this.start = [];
+        const delta = this.delta = [];
+        const keys = this.keys = [];
+        const goto = this.goto;
+        const object = this.object;
 
         // loops through all keys in goto object
-        for (var key in this.goto)
+        for (let key in goto)
         {
 
             // handles keys with one additional level e.g.: goto = {scale: {x: 5, y: 5}}
-            if (isNaN(this.goto[key]))
+            if (isNaN(goto[key]))
             {
-                this.keys[i] = {key: key, children: []};
-                this.start[i] = [];
-                this.delta[i] = [];
-                var j = 0;
-                for (var key2 in this.goto[key])
+                keys[i] = {key: key, children: []};
+                start[i] = [];
+                delta[i] = [];
+                let j = 0;
+                for (let key2 in goto[key])
                 {
-                    this.keys[i].children[j] = key2;
-                    this.start[i][j] = parseFloat(this.object[key][key2]);
-                    this.start[i][j] = this._correctDOM(key2, this.start[i][j]);
-                    this.start[i][j] = isNaN(this.start[i][j]) ? 0 : this.start[i][j];
-                    this.delta[i][j] = this.goto[key][key2] - this.start[i][j];
+                    keys[i].children[j] = key2;
+                    start[i][j] = parseFloat(object[key][key2]);
+                    start[i][j] = this._correctDOM(key2, start[i][j]);
+                    start[i][j] = isNaN(this.start[i][j]) ? 0 : start[i][j];
+                    delta[i][j] = goto[key][key2] - start[i][j];
                     j++;
                 }
             }
             else
             {
-                this.start[i] = parseFloat(this.object[key]);
-                this.start[i] = this._correctDOM(key, this.start[i]);
-                this.start[i] = isNaN(this.start[i]) ? 0 : this.start[i];
-                this.delta[i] = this.goto[key] - this.start[i];
-                this.keys[i] = key;
+                start[i] = parseFloat(object[key]);
+                start[i] = this._correctDOM(key, start[i]);
+                start[i] = isNaN(this.start[i]) ? 0 : start[i];
+                delta[i] = goto[key] - start[i];
+                keys[i] = key;
             }
             i++;
         }
@@ -129,75 +131,98 @@ class To extends Wait
 
     reverse()
     {
-        for (var i = 0; i < this.keys.length; i++)
+        const object = this.object;
+        const keys = this.keys;
+        const goto = this.goto;
+        const delta = this.delta;
+        const start = this.start;
+
+        for (let i = 0, _i = keys.length; i < _i; i++)
         {
-            if (isNaN(this.goto[this.keys[i]]))
+            const key = keys[i];
+            if (isNaN(goto[key]))
             {
-                for (var j = 0; j < this.keys[i].children.length; j++)
+                for (let j = 0, _j = key.children.length; j < _j; j++)
                 {
-                    this.delta[i][j] = -this.delta[i][j];
-                    this.start[i][j] = parseFloat(this.object[this.keys[i].key][this.keys[i].children[j]]);
-                    this.start[i][j] = isNaN(this.start[i][j]) ? 0 : this.start[i][j];
+                    delta[i][j] = -delta[i][j];
+                    start[i][j] = parseFloat(object[key.key][key.children[j]]);
+                    start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
                 }
             }
             else
             {
-                this.delta[i] = -this.delta[i];
-                this.start[i] = parseFloat(this.object[this.keys[i]]);
-                this.start[i] = isNaN(this.start[i]) ? 0 : this.start[i];
+                delta[i] = -delta[i];
+                start[i] = parseFloat(object[key]);
+                start[i] = isNaN(start[i]) ? 0 : start[i];
             }
         }
     }
 
     continue()
     {
-        for (var i = 0; i < this.keys.length; i++)
+        const object = this.object;
+        const keys = this.keys;
+        const goto = this.goto;
+        const start = this.start;
+
+        for (let i = 0, _i = keys.length; i < _i; i++)
         {
-            if (isNaN(this.goto[this.keys[i]]))
+            const key = keys[i];
+            if (isNaN(goto[key]))
             {
-                for (var j = 0; j < this.keys[i].children.length; j++)
+                for (let j = 0, _j = key.children.length; j < _j; j++)
                 {
-                    this.start[i][j] = parseFloat(this.object[this.keys[i].key][this.keys[i].children[j]]);
-                    this.start[i][j] = isNaN(this.start[i][j]) ? 0 : this.start[i][j];
+                    this.start[i][j] = parseFloat(object[key.key][key.children[j]]);
+                    this.start[i][j] = isNaN(start[i][j]) ? 0 : start[i][j];
                 }
             }
             else
             {
-                this.start[i] = parseFloat(this.object[this.keys[i]]);
-                this.start[i] = isNaN(this.start[i]) ? 0 : this.start[i];
+                start[i] = parseFloat(object[key]);
+                start[i] = isNaN(start[i]) ? 0 : start[i];
             }
         }
     }
 
     calculate(/*elapsed*/)
     {
-        for (var i = 0; i < this.keys.length; i++)
+        const object = this.object;
+        const list = this.list;
+        const keys = this.keys;
+        const goto = this.goto;
+        const time = this.time;
+        const start = this.start;
+        const delta = this.delta;
+        const duration = this.duration;
+        const ease = this.ease;
+        for (let i = 0; i < this.keys.length; i++)
         {
-            if (isNaN(this.goto[this.keys[i]]))
+            const key = keys[i];
+            if (isNaN(goto[key]))
             {
-                for (var j = 0; j < this.keys[i].children.length; j++)
+                const key1 = key.key;
+                for (let j = 0, _j = key.children.length; j < _j; j++)
                 {
-                    const key1 = this.keys[i].key;
-                    const key2 = this.keys[i].children[j];
-                    const others = this.object[key1][key2] = this.ease(this.time, this.start[i][j], this.delta[i][j], this.duration);
-                    if (this.list)
+                    const key2 = key.children[j];
+                    const others = object[key1][key2] = ease(time, start[i][j], delta[i][j], duration);
+                    if (list)
                     {
-                        for (let j = 1; j < this.list.length; j++)
+                        for (let k = 1, _k = list.length; k < _k; k++)
                         {
-                            this.list[j][key1][key2] = others;
+                            list[k][key1][key2] = others;
                         }
                     }
                 }
             }
             else
             {
-                const key = this.keys[i];
-                const others = this.object[key] = this.ease(this.time, this.start[i], this.delta[i], this.duration);
-                if (this.list)
+                const key = keys[i];
+                const others = object[key] = ease(time, start[i], delta[i], duration);
+                if (list)
                 {
-                    for (let j = 1; j < this.list.length; j++)
+                    for (let j = 1, _j = this.list.length; j < _j; j++)
                     {
-                        this.list[j][key] = others;
+                        list[j][key] = others;
                     }
                 }
             }
