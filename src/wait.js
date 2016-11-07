@@ -19,6 +19,7 @@ class Wait
      * @param {(boolean|number)} [options.repeat] true: repeat animation forever; n: repeat animation n times
      * @param {(boolean|number)} [options.reverse] true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times
      * @param {(boolean|number)} [options.continue] true: continue animation with new starting values; n: continue animation n times
+     * @param {number} [options.id] user-generated id (e.g., I use it to properly load animations when an object has multiple animations running)
      * @param {Function} [options.load] loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set
      * @param {Function} [options.ease] function from easing.js (see http://easings.net for examples)*
      * @param {Renderer} [options.renderer] sets Renderer.dirty for each loop*
@@ -57,6 +58,10 @@ class Wait
         {
             save.wait = options.wait;
         }
+        if (options.id)
+        {
+            save.id = options.id;
+        }
         if (options.pause)
         {
             save.pause = options.pause;
@@ -88,6 +93,7 @@ class Wait
         this.options.reverse = load.reverse;
         this.options.continue = load.continue;
         this.options.cancel = load.cancel;
+        this.options.id = load.id;
         this.time = load.time;
         this.duration = load.duration;
     }
