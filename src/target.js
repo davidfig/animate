@@ -58,13 +58,13 @@ class Target extends Wait
     {
         if (!this.lastTarget || this.target.x !== this.lastTarget.x || this.target.y !== this.lastTarget.y || this.lastTarget.posX !== this.object.x || this.lastTarget.posY !== this.object.y)
         {
-            var angle = Math.atan2(this.target.y - this.object.y, this.target.x - this.object.x);
+            const angle = Math.atan2(this.target.y - this.object.y, this.target.x - this.object.x);
             this.cos = Math.cos(angle);
             this.sin = Math.sin(angle);
             this.lastTarget = {x: this.target.x, y: this.target.y, posX: this.object.x, posY: this.object.y};
         }
-        var deltaX = this.target.x - this.object.x;
-        var deltaY = this.target.y - this.object.y;
+        const deltaX = this.target.x - this.object.x;
+        const deltaY = this.target.y - this.object.y;
         if (deltaX === 0 && deltaY === 0)
         {
             if (this.options.onDone)
@@ -78,8 +78,8 @@ class Target extends Wait
         }
         else
         {
-            var signX = deltaX >= 0;
-            var signY = deltaY >= 0;
+            const signX = deltaX >= 0;
+            const signY = deltaY >= 0;
             this.object.x += this.cos * elapsed * this.speed;
             this.object.y += this.sin * elapsed * this.speed;
             if (signX !== ((this.target.x - this.object.x) >= 0))
