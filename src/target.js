@@ -61,7 +61,7 @@ class Target extends Wait
             var angle = Math.atan2(this.target.y - this.object.y, this.target.x - this.object.x);
             this.cos = Math.cos(angle);
             this.sin = Math.sin(angle);
-            this.lastTarget = {x: this.target.x, y: this.target.y};
+            this.lastTarget = {x: this.target.x, y: this.target.y, posX: this.object.x, posY: this.object.y};
         }
         var deltaX = this.target.x - this.object.x;
         var deltaY = this.target.y - this.object.y;
