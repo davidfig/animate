@@ -58,7 +58,7 @@ class Wait
         {
             save.wait = options.wait;
         }
-        if (options.id)
+        if (typeof options.id !== 'undefined')
         {
             save.id = options.id;
         }
