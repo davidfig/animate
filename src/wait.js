@@ -22,7 +22,7 @@ class Wait
      * @param {(boolean|number)} [options.continue] true: continue animation with new starting values; n: continue animation n times
      * @param {number} [options.id] user-generated id (e.g., I use it to properly load animations when an object has multiple animations running)
      * @param {Function} [options.load] loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set
-     * @param {Function} [options.ease] function from easing.js (see http://easings.net for examples)*
+     * @param {Function|string} [options.ease] function (or penner function name) from easing.js (see http://easings.net for examples)*
      * @param {Renderer} [options.renderer] sets Renderer.dirty for each loop*
      * @param {Function} [options.onDone] function pointer for when the animation expires*
      * @param {Function} [options.onCancel] function pointer called after cancelled*

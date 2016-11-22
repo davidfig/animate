@@ -197,8 +197,9 @@ base class for all animations
 | [options.repeat] | <code>boolean</code> &#124; <code>number</code> |  | true: repeat animation forever; n: repeat animation n times |
 | [options.reverse] | <code>boolean</code> &#124; <code>number</code> |  | true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times |
 | [options.continue] | <code>boolean</code> &#124; <code>number</code> |  | true: continue animation with new starting values; n: continue animation n times |
+| [options.id] | <code>number</code> |  | user-generated id (e.g., I use it to properly load animations when an object has multiple animations running) |
 | [options.load] | <code>function</code> |  | loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set |
-| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples)* |
+| [options.ease] | <code>function</code> &#124; <code>string</code> |  | function (or penner function name) from easing.js (see http://easings.net for examples)* |
 | [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop* |
 | [options.onDone] | <code>function</code> |  | function pointer for when the animation expires* |
 | [options.onCancel] | <code>function</code> |  | function pointer called after cancelled* |
