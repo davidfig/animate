@@ -6,6 +6,7 @@
  * {@link https://github.com/davidfig/animate}
  */
 
+const Easing = require('penner');
 const Add = require('./animate.js').add;
 
 /** base class for all animations */
@@ -42,6 +43,10 @@ class Wait
         else
         {
             this.time = 0;
+        }
+        if (options.ease && typeof options.ease === 'string')
+        {
+            options.ease = this.convertPenner(options.ease);
         }
         Add(this);
     }
@@ -278,6 +283,45 @@ class Wait
     noEase (t, b, c, d)
     {
         return c*(t/=d) + b;
+    }
+
+    convertPenner(ease)
+    {
+        switch (ease)
+        {
+        case 'linear': return Easing.linear;
+        case 'easeInQuad': return Easing.easeInQuad;
+        case 'easeOutQuad': return Easing.easeOutQuad;
+        case 'easeInOutQuad': return Easing.easeInOutQuad;
+        case 'easeInCubic': return Easing.easeInCubic;
+        case 'easeOutCubic': return Easing.easeOutCubic;
+        case 'easeInOutCubic': return Easing.easeInOutCubic;
+        case 'easeInQuart': return Easing.easeInQuart;
+        case 'easeOutQuart': return Easing.easeOutQuart;
+        case 'easeInOutQuart': return Easing.easeInOutQuart;
+        case 'easeInQuint': return Easing.easeInQuint;
+        case 'easeOutQuint': return Easing.easeOutQuint;
+        case 'easeInOutQuint': return Easing.easeInOutQuint;
+        case 'easeInSine': return Easing.easeInSine;
+        case 'easeOutSine': return Easing.easeOutSine;
+        case 'easeInOutSine': return Easing.easeInOutSine;
+        case 'easeInExpo': return Easing.easeInExpo;
+        case 'easeOutExpo': return Easing.easeOutExpo;
+        case 'easeInOutExpo': return Easing.easeInOutExpo;
+        case 'easeInCirc': return Easing.easeInCirc;
+        case 'easeOutCirc': return Easing.easeOutCirc;
+        case 'easeInOutCirc': return Easing.easeInOutCirc;
+        case 'easeInElastic': return Easing.easeInElastic;
+        case 'easeOutElastic': return Easing.easeOutElastic;
+        case 'easeInOutElastic': return Easing.easeInOutElastic;
+        case 'easeInBack': return Easing.easeInBack;
+        case 'easeOutBack': return Easing.easeOutBack;
+        case 'easeInOutBack': return Easing.easeInOutBack;
+        case 'easeInBounce': return Easing.easeInBounce;
+        case 'easeOutBounce': return Easing.easeOutBounce;
+        case 'easeInOutBounce': return Easing.easeInOutBounce;
+        default: return this.linear;
+        }
     }
 }
 
