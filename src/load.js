@@ -13,6 +13,7 @@ const Shake = require('./shake.js');
 const Angle = require('./angle.js');
 const Face = require('./face.js');
 const Target = require('./target.js');
+const Movie = require('./movie.js');
 
 /**
  * restart an animation from a saved state
@@ -44,6 +45,8 @@ function load(object, load, options)
         return new Face(object[0], object[1], null, options);
     case 'Target':
         return new Target(object[0], object[1], null, options);
+    case 'Movie':
+        return new Movie(object, object[1], null, options);
     }
 }
 

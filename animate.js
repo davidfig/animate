@@ -18,5 +18,6 @@ module.exports = {
     tint: require('./src/tint.js'),
     face: require('./src/face.js'),
     angle: require('./src/angle.js'),
-    target: require('./src/target.js')
+    target: require('./src/target.js'),
+    movie: require('./src/movie.js')
 };
