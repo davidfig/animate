@@ -4,10 +4,10 @@
   "description": "debug panels for javascript (designed for game development)",
   "main": "index.js",
   "dependencies": {
-    "browserify": "^13.1.0",
     "highlight.js": "^9.6.0",
     "penner": "^0.1.3",
     "pixi.js": "^4.0.1",
+    "uglify-js": "^2.7.3",
     "yy-angle": "^1.0.0",
     "yy-animate": "^1.0.0",
     "yy-color": "^1.0.0",
@@ -16,13 +16,17 @@
     "yy-update": "^1.0.0"
   },
   "devDependencies": {
-    "uglify-js": "^2.7.3"
+    "uglifyjs": "^2.4.10",
+    "browserify": "^13.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "browserify *.js -u index.compiled.js > index.compiled.js",
-    "watch": "watchify *.js -u index.compiled.js -vo index.compiled.js",
-    "compress": "browserify *.js -u index.compiled.js | node_modules/.bin/uglifyjs -mc > index.compiled.js"
+    "test": "npm run clear-server && node_modules/.bin/live-server",
+    "run": "npm run build && npm run chrome",
+    "build": "node_modules/.bin/browserify *.js -u index.compiled.js > index.compiled.js",
+    "compress": "node_modules/.bin/browserify *.js -u index.compiled.js && node_modules/.bin/uglifyjs -mc > index.compiled.js",
+    "@": "----------------------------------------------------------------------------------",
+    "chrome": "open -a 'Google Chrome'",
+    "clear-server": "killall node || true"
   },
   "repository": {
     "type": "git",

@@ -2,7 +2,6 @@ const PIXI = require('pixi.js');
 const Debug = require('yy-debug');
 const Update = require('yy-update');
 const Renderer = require('yy-renderer');
-const Easing = require('penner');
 const Animate = require('../animate/animate.js');
 
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
@@ -19,11 +18,11 @@ pixi();
 
 // red triangle fades, moves, and scales; repeats and reverses forever
 animates[0] = new Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
-    {repeat: true, reverse: true, ease: Easing.easeInOutSine});
+    {repeat: true, reverse: true, ease: 'easeInOutSine'});
 
 // green triangle moves, rotates, and fades when done
 new Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
-    {reverse: true, onDone: function (object) { new Animate.to(object, {alpha: 0}, 2000); }, ease: Easing.easeInSine});
+    {reverse: true, onDone: function (object) { new Animate.to(object, {alpha: 0}, 2000); }, ease: 'easeInSine'});
 
 // blue triangle spins forever
 animates[1] = new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
@@ -35,7 +34,7 @@ animates[2] = new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: t
 animates[3] = new Animate.shake([shaker], 5, 0, {wait: 1000});
 
 // animate a group that is not a container
-animates[4] = new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: Easing.easeInOutSine});
+animates[4] = new Animate.to(theDots, {alpha: 0.1, scale: {x: 2, y: 2}}, 2000, {repeat: true, reverse: true, ease: 'easeInOutSine'});
 
 function pacmanEach()
 {
@@ -97,6 +96,16 @@ circleAngle.tint = 0xff00ff;
 circleAngle.width = circleAngle.height = 50;
 circleAngle.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
 animates[5] = new Animate.angle(circleAngle, Math.random(), 0.1, 0, {onEach: onEachAngle});
+
+var faces = [];
+for (var i = 1; i <= 7; i++)
+{
+    faces.push(PIXI.Texture.fromImage('/faces/happy-' + i + '.png'));
+}
+var smile = new PIXI.Sprite(faces[0]);
+smile.position.set(550, 50);
+renderer.addChild(smile);
+new Animate.movie(smile, faces, 1500, {repeat: true, reverse: true});
 
 Update.update();
 
