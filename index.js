@@ -9,7 +9,7 @@ Debug.init();
 Update.init({debug: Debug, FPS: true, percent: true});
 
 // intialize update loop for Animate with optional debug info
-Animate.init({update: Update, debug: Debug});
+Animate.init({update: Update, debug: Debug, Debug: Debug, count: true});
 
 // set up pixi and shapes
 let renderer, red, green, blue, shaker, pacman;

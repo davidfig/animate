@@ -10,8 +10,8 @@
     "uglify-js": "^2.7.3",
     "yy-angle": "^1.0.0",
     "yy-animate": "^1.0.0",
-    "yy-color": "^1.0.0",
-    "yy-debug": "^1.0.0",
+    "yy-color": "^1.0.6",
+    "yy-debug": "^1.0.8",
     "yy-renderer": "^1.0.0",
     "yy-update": "^1.0.0"
   },
