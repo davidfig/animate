@@ -1979,7 +1979,7 @@ animates[5] = new Animate.angle(circleAngle, Math.random(), 0.1, 0, {onEach: onE
 var faces = [];
 for (var i = 1; i <= 7; i++)
 {
-    faces.push(PIXI.Texture.fromImage('/faces/happy-' + i + '.png'));
+    faces.push(PIXI.Texture.fromImage('faces/happy-' + i + '.png'));
 }
 var smile = new PIXI.Sprite(faces[0]);
 smile.position.set(550, 50);
