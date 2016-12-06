@@ -9,19 +9,32 @@
 // current list of animations
 const list = [];
 
+// hold debug panel for count (if available)
+let Debug;
+let count;
+
 /**
  * used to initialize update call
  * @param {object} [options]
  * @param {boolean} [options.update] Update from {@link https://github.com/davidfig/update}, if not defined, update needs to be called manually
- * @param {boolean} [options.debug] include debug options when calling update
+ * @param {boolean} [options.debug] include debug in percent panel when calling update
+ * @param {boolean|object} [options.count] include the animations running count in debug panel {@link https://github.com/davidfig/debug}; can also provide an object with styling for the panel
+ * @param {Debug} [options.Debug] use this instantiation of yy-debug for options.count {@link https://github.com/davidfig/debug}
  */
 function init(options)
 {
     options = options || {};
     if (options.update)
     {
-        var opts = (options.debug) ? {percent: 'Animate'} : null;
+        const opts = (options.debug) ? {percent: 'Animate'} : null;
         options.update.add(update, opts);
+    }
+    if (options.count)
+    {
+        Debug = options.Debug || require('yy-debug');
+        const opts = (typeof options.count === 'object') ? options.count : {};
+        opts.text = '0 animations';
+        count = Debug.add('AnimateCount', opts)
     }
 }
 
@@ -66,13 +79,25 @@ function add(animate)
  */
 function update(elapsed)
 {
-    for (var i = list.length - 1; i >= 0; i--)
+    let n = 0;
+    for (let i = list.length - 1; i >= 0; i--)
     {
-        var animate = list[i];
+        const animate = list[i];
         if (animate.update(elapsed))
         {
             list.splice(i, 1);
         }
+        else
+        {
+            if (!animate.options.pause)
+            {
+                n++;
+            }
+        }
+    }
+    if (count)
+    {
+        Debug.one(n + ' animations', {panel: count});
     }
 }
 

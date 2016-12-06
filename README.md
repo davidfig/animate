@@ -18,6 +18,9 @@ https://davidfig.github.io/animate/
 <dt><a href="#Face">Face</a></dt>
 <dd><p>Rotates an object to face the target</p>
 </dd>
+<dt><a href="#Movie">Movie</a></dt>
+<dd><p>animate a movie of textures</p>
+</dd>
 <dt><a href="#Shake">Shake</a></dt>
 <dd><p>shakes an object or list of objects</p>
 </dd>
@@ -87,6 +90,39 @@ Rotates an object to face the target
 | speed | <code>number</code> | in radians/millisecond |
 | [options] | <code>object</code> | @see [Wait](#Wait) |
 | [options.keepAlive] | <code>boolean</code> | don't stop animation when complete |
+
+<a name="Movie"></a>
+
+## Movie
+animate a movie of textures
+
+**Kind**: global class  
+**Examples**: // animate sprite to (20, 20) over 1s using easeInOuTsine, and then reverse the animation
+   new Animate.movie(sprite, [texture1, texture2, texture3], 500);  
+<a name="new_Movie_new"></a>
+
+### new Movie(object, textures, [duration], [options])
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| object | <code>object</code> |  | to animate |
+| textures | <code>array</code> |  | parameters to animate, e.g.: {alpha: 5, scale: {x, 5} rotation: Math.PI} |
+| [duration] | <code>number</code> | <code>0</code> | time to run (use 0 for infinite duration--should only be used with customized easing functions) |
+| [options] | <code>object</code> |  |  |
+| [options.wait] | <code>number</code> | <code>0</code> | n milliseconds before starting animation (can also be used to pause animation for a length of time) |
+| [options.pause] | <code>boolean</code> |  | start the animation paused |
+| [options.repeat] | <code>boolean</code> &#124; <code>number</code> |  | true: repeat animation forever; n: repeat animation n times |
+| [options.reverse] | <code>boolean</code> &#124; <code>number</code> |  | true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times |
+| [options.continue] | <code>boolean</code> &#124; <code>number</code> |  | true: continue animation with new starting values; n: continue animation n times |
+| [options.load] | <code>function</code> |  | loads an animation using a .save() object; note the * parameters below cannot be loaded and must be re-set |
+| [options.ease] | <code>function</code> |  | function from easing.js (see http://easings.net for examples)* |
+| [options.renderer] | <code>Renderer</code> |  | sets Renderer.dirty for each loop* |
+| [options.onDone] | <code>function</code> |  | function pointer for when the animation expires* |
+| [options.onCancel] | <code>function</code> |  | function pointer called after cancelled* |
+| [options.onWait] | <code>function</code> |  | function pointer for wait* |
+| [options.onFirst] | <code>function</code> |  | function pointer for first time update is called (does not include pause or wait time)* |
+| [options.onEach] | <code>function</code> |  | function pointer called after each update* |
+| [options.onLoop] | <code>function</code> |  | function pointer called after a revere, repeat, or continue* |
 
 <a name="Shake"></a>
 
@@ -219,7 +255,9 @@ used to initialize update call
 | --- | --- | --- |
 | [options] | <code>object</code> |  |
 | [options.update] | <code>boolean</code> | Update from [https://github.com/davidfig/update](https://github.com/davidfig/update), if not defined, update needs to be called manually |
-| [options.debug] | <code>boolean</code> | include debug options when calling update |
+| [options.debug] | <code>boolean</code> | include debug in percent panel when calling update |
+| [options.count] | <code>boolean</code> &#124; <code>object</code> | include the animations running count in debug panel [https://github.com/davidfig/debug](https://github.com/davidfig/debug); can also provide an object with styling for the panel |
+| [options.Debug] | <code>Debug</code> | use this instantiation of yy-debug for options.count [https://github.com/davidfig/debug](https://github.com/davidfig/debug) |
 
 <a name="remove"></a>
 

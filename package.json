@@ -20,7 +20,8 @@
   "dependencies": {
     "penner": "^0.1.3",
     "yy-angle": "^1.0.1",
-    "yy-color": "^1.0.0"
+    "yy-color": "^1.0.0",
+    "yy-debug": "^1.0.8"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^1.3.7"
