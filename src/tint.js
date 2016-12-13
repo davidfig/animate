@@ -13,7 +13,7 @@ const Wait = require('./wait.js');
 class Tint extends Wait
 {
     /**
-     * @param {PIXI.DisplayObject} object
+     * @param {PIXI.DisplayObject|PIXI.DisplayObject[]} object
      * @param {number} tint
      * @param {number} [duration=0] in milliseconds, if 0, repeat forever
      * @param {object} [options] @see {@link Wait}
@@ -23,6 +23,11 @@ class Tint extends Wait
         options = options || {};
         super(object, options);
         this.type = 'Tint';
+        if (Array.isArray(object))
+        {
+            this.list = object;
+            this.object = this.list[0];
+        }
         this.duration = duration;
         this.ease = this.options.ease || this.noEase;
         if (options.load)
@@ -31,7 +36,7 @@ class Tint extends Wait
         }
         else
         {
-            this.start = object.tint;
+            this.start = this.object.tint;
             this.to = tint;
         }
     }
@@ -58,7 +63,18 @@ class Tint extends Wait
     calculate(/* elapsed */)
     {
         const percent = this.ease(this.time, 0, 1, this.duration);
-        this.object.tint = Color.blend(percent, this.start, this.to);
+        const color = Color.blend(percent, this.start, this.to);
+        if (this.list)
+        {
+            for (const object of this.list)
+            {
+                object.tint = color;
+            }
+        }
+        else
+        {
+            this.object.tint = color;
+        }
     }
 
     reverse()
