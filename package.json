@@ -15,18 +15,11 @@
     "yy-renderer": "^1.0.0",
     "yy-update": "^1.0.0"
   },
-  "devDependencies": {
-    "uglifyjs": "^2.4.10",
-    "browserify": "^13.1.1"
-  },
   "scripts": {
-    "test": "npm run clear-server && node_modules/.bin/live-server",
-    "run": "npm run build && npm run chrome",
-    "build": "node_modules/.bin/browserify *.js -u index.compiled.js > index.compiled.js",
-    "compress": "node_modules/.bin/browserify *.js -u index.compiled.js && node_modules/.bin/uglifyjs -mc > index.compiled.js",
-    "@": "----------------------------------------------------------------------------------",
-    "chrome": "open -a 'Google Chrome'",
-    "clear-server": "killall node || true"
+    "test": "live-server",
+    "run": "npm run build && refresh",
+    "build": "browserify index.js > index.compiled.js",
+    "compress": "browserify index.js && uglifyjs -mc > index.compiled.js"
   },
   "repository": {
     "type": "git",
