@@ -66,7 +66,7 @@ class Tint extends Wait
         const color = Color.blend(percent, this.start, this.to);
         if (this.list)
         {
-            for (const object of this.list)
+            for (let object of this.list)
             {
                 object.tint = color;
             }
