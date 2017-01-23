@@ -8,8 +8,6 @@ import * as Animate from '../animate/animate';
 Debug.init();
 Update.init({debug: Debug, FPS: true, percent: true});
 
-console.log('ugh!!!!')
-
 // intialize update loop for Animate with optional debug info
 Animate.init({update: Update, debug: Debug, Debug: Debug, count: true});
 
