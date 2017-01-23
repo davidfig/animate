@@ -1,12 +1,14 @@
-const PIXI = require('pixi.js');
-const Debug = require('yy-debug');
-const Update = require('yy-update');
-const Renderer = require('yy-renderer');
-const Animate = require('../animate/animate.js');
+import * as PIXI from 'pixi.js';
+import * as Debug from 'yy-debug';
+import * as Update from 'yy-update';
+import * as Renderer from 'yy-renderer';
+import * as Animate from '../animate/animate';
 
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
 Debug.init();
 Update.init({debug: Debug, FPS: true, percent: true});
+
+console.log('ugh!!!!')
 
 // intialize update loop for Animate with optional debug info
 Animate.init({update: Update, debug: Debug, Debug: Debug, count: true});

@@ -5,9 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "highlight.js": "^9.6.0",
-    "penner": "^0.1.3",
     "pixi.js": "^4.0.1",
-    "uglify-js": "^2.7.3",
     "yy-angle": "^1.0.0",
     "yy-animate": "^1.0.0",
     "yy-color": "^1.0.6",
@@ -18,8 +16,7 @@
   "scripts": {
     "test": "live-server",
     "run": "npm run build && refresh",
-    "build": "browserify index.js > index.compiled.js",
-    "compress": "browserify index.js && uglifyjs -mc > index.compiled.js"
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
