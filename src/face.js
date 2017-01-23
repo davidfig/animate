@@ -6,11 +6,11 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-const Angle = require('yy-angle');
-const Wait = require('./wait.js');
+import Angle from 'yy-angle';
+import wait from './wait';
 
 /** Rotates an object to face the target */
-class Face extends Wait
+export default class face extends wait
 {
     /**
      * @param {object} object
@@ -78,5 +78,3 @@ class Face extends Wait
         }
     }
 }
-
-module.exports = Face;

@@ -6,7 +6,7 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-const Wait = require('./wait.js');
+import wait from './wait';
 
 /**
  * animate a movie of textures
@@ -15,7 +15,7 @@ const Wait = require('./wait.js');
  *    // animate sprite to (20, 20) over 1s using easeInOuTsine, and then reverse the animation
  *    new Animate.movie(sprite, [texture1, texture2, texture3], 500);
  */
-class Movie extends Wait
+export default class movie extends wait
 {
     /**
      * @param {object} object to animate
@@ -118,5 +118,3 @@ class Movie extends Wait
         }
     }
 }
-
-module.exports = Movie;

@@ -6,12 +6,12 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-const Wait = require('./wait.js');
+import wait from './wait';
 
 /**
  * shakes an object or list of objects
  */
-class Shake extends Wait
+export default class shake extends wait
 {
     /**
      * @param {object|array} object or list of objects to shake
@@ -114,5 +114,3 @@ class Shake extends Wait
         }
     }
 }
-
-module.exports = Shake;

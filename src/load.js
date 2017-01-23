@@ -6,14 +6,14 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-const Wait = require('./wait.js');
-const To = require('./to.js');
-const Tint = require('./tint.js');
-const Shake = require('./shake.js');
-const Angle = require('./angle.js');
-const Face = require('./face.js');
-const Target = require('./target.js');
-const Movie = require('./movie.js');
+import wait from './wait';
+import to from './to';
+import tint from './tint';
+import shake from './shake';
+import angle from './angle';
+import face from './face';
+import target from './target';
+import movie from './movie';
 
 /**
  * restart an animation from a saved state
@@ -21,7 +21,8 @@ const Movie = require('./movie.js');
  * @param {object} load object from .save()
  * @param {object} [options] include any additional options that cannot be saved (e.g., onDone function pointer)
  */
-function load(object, load, options)
+
+export default function load(object, load, options)
 {
     if (!load)
     {
@@ -32,22 +33,20 @@ function load(object, load, options)
     switch (load.type)
     {
     case 'Wait':
-        return new Wait(object, options);
+        return new wait(object, options);
     case 'To':
-        return new To(object, null, null, options);
+        return new to(object, null, null, options);
     case 'Tint':
-        return new Tint(object, null, null, options);
+        return new tint(object, null, null, options);
     case 'Shake':
-        return new Shake(object, null, null, options);
+        return new shake(object, null, null, options);
     case 'Angle':
-        return new Angle(object, null, null, null, options);
+        return new angle(object, null, null, null, options);
     case 'Face':
-        return new Face(object[0], object[1], null, options);
+        return new face(object[0], object[1], null, options);
     case 'Target':
-        return new Target(object[0], object[1], null, options);
+        return new target(object[0], object[1], null, options);
     case 'Movie':
-        return new Movie(object, object[1], null, options);
+        return new movie(object, object[1], null, options);
     }
 }
-
-module.exports = load;

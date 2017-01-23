@@ -6,11 +6,11 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-const Color = require('yy-color');
-const Wait = require('./wait.js');
+import * as Color from 'yy-color';
+import wait from './wait';
 
 /** changes the tint of an object */
-class Tint extends Wait
+export default class tint extends wait
 {
     /**
      * @param {PIXI.DisplayObject|PIXI.DisplayObject[]} object
@@ -84,5 +84,3 @@ class Tint extends Wait
         this.start = swap;
     }
 }
-
-module.exports = Tint;
