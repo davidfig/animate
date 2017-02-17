@@ -6,10 +6,10 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-import wait from './wait';
+const wait = require('./wait');
 
 /** animate object's {x, y} using an angle */
-export default class angle extends wait
+class angle extends wait
 {
     /**
      * @param {object} object to animate
@@ -71,3 +71,5 @@ export default class angle extends wait
         this.object.y += this.sin * elapsed * this.speed;
     }
 }
+
+module.exports = angle;

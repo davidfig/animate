@@ -29,7 +29,8 @@ let count;
  * @param {boolean|object} [options.count] include the animations running count in debug panel {@link https://github.com/davidfig/debug}; can also provide an object with styling for the panel
  * @param {Debug} [options.Debug] use this instantiation of yy-debug for options.count {@link https://github.com/davidfig/debug}
  */
-export function init(options)
+
+function init(options)
 {
     options = options || {};
     if (options.update)
@@ -50,7 +51,7 @@ export function init(options)
  * remove an animation
  * @param {object|array} animate - the animation (or array of animations) to remove
  */
-export function remove(animate)
+function remove(animate)
 {
     if (animate)
     {
@@ -75,7 +76,7 @@ export function remove(animate)
     }
 }
 
-export function add(animate)
+function add(animate)
 {
     list.push(animate);
     return animate;
@@ -85,7 +86,7 @@ export function add(animate)
  * update function (can be called manually or called internally by {@link init})
  * @param {number} elapsed since last update
  */
-export function update(elapsed)
+function update(elapsed)
 {
     let n = 0;
     for (let i = list.length - 1; i >= 0; i--)
@@ -109,12 +110,18 @@ export function update(elapsed)
     }
 }
 
-export {default as wait} from './src/wait';
-export {default as to} from './src/to';
-export {default as shake} from './src/shake';
-export {default as tint} from './src/tint';
-export {default as face} from './src/face';
-export {default as angle} from './src/angle';
-export {default as target} from './src/target';
-export {default as movie} from './src/movie';
-export {default as load} from './src/load';
+module.exports = {
+    init,
+    update,
+    remove,
+    add,
+    wait: require('./src/wait'),
+    to: require('./src/to'),
+    shake: require('./src/shake'),
+    tint: require('./src/tint'),
+    face: require('./src/face'),
+    angle: require('./src/angle'),
+    target: require('./src/target'),
+    movie: require('./src/movie'),
+    load: require('./src/load')
+};

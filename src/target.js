@@ -6,10 +6,10 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-import wait from './wait';
+const wait = require('./wait');
 
 /** move an object to a target's location */
-export default class target extends wait
+class target extends wait
 {
     /**
      * move to a target
@@ -85,3 +85,5 @@ export default class target extends wait
         }
     }
 }
+
+module.exports = target;

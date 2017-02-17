@@ -6,23 +6,23 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-import wait from './wait';
-import to from './to';
-import tint from './tint';
-import shake from './shake';
-import angle from './angle';
-import face from './face';
-import target from './target';
-import movie from './movie';
+const wait = require('./wait');
+const to = require('./to');
+const tint = require('./tint');
+const shake = require('./shake');
+const angle = require('./angle');
+const face = require('./face');
+const target = require('./target');
+const movie = require('./movie');
 
 /**
- * restart an animation from a saved state
+ * restart an animation = require(a saved state
  * @param {object} object(s) to animate (cannot be saved)
- * @param {object} load object from .save()
+ * @param {object} load object = require(.save()
  * @param {object} [options] include any additional options that cannot be saved (e.g., onDone function pointer)
  */
 
-export default function load(object, load, options)
+function load(object, load, options)
 {
     if (!load)
     {
@@ -50,3 +50,5 @@ export default function load(object, load, options)
         return new movie(object, object[1], null, options);
     }
 }
+
+module.exports = load;

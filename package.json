@@ -1,10 +1,9 @@
 {
   "name": "yy-animate",
-  "version": "1.4.2",
+  "version": "1.5.2",
   "description": "Javascript animation library for use with PIXI.js",
   "main": "animate.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "node_modules/.bin/jsdoc2md --template README.hbs **/*.js > README.md"
   },
   "repository": {

@@ -6,7 +6,7 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-import wait from './wait';
+const wait = require('./wait');
 
 /**
  * animate any numeric parameter of an object or array of objects
@@ -18,7 +18,7 @@ import wait from './wait';
  *    // animate list of sprites to a scale over 10s after waiting 1s
  *    new Animate.to([sprite1, sprite2, sprite3], {scale: {x: 0.25, y: 0.25}}, 10000, {wait: 1000});
  */
-export default class to extends wait
+class to extends wait
 {
     /**
      * @param {object} object to animate
@@ -229,3 +229,5 @@ export default class to extends wait
         }
     }
 }
+
+module.exports = to;

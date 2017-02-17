@@ -6,11 +6,10 @@
  * {@link https://github.com/davidfig/animate}
  */
 
-import Easing from 'penner';
-import {add} from '../animate';
+const Easing = require('penner');
 
 /** base class for all animations */
-export default class wait
+class wait
 {
     /**
      * @param {object} object to animate
@@ -48,7 +47,7 @@ export default class wait
         {
             options.ease = Easing[options.ease] || this.linear;
         }
-        add(this);
+        require('../animate').add(this);
     }
 
     save()
@@ -285,3 +284,5 @@ export default class wait
         return c*(t/=d) + b;
     }
 }
+
+module.exports = wait;
