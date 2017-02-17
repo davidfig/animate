@@ -1,8 +1,8 @@
-import * as PIXI from 'pixi.js';
-import * as Debug from 'yy-debug';
-import * as Update from 'yy-update';
-import * as Renderer from 'yy-renderer';
-import * as Animate from '../animate/animate';
+const PIXI = require('pixi.js');
+const Debug = require('yy-debug');
+const Update = require('yy-update');
+const Renderer = require('yy-renderer');
+const Animate = require('../animate/animate');
 
 // initialize Debug and Update -- this is only needed for the debug panels on the bottom right
 Debug.init();
@@ -27,7 +27,7 @@ new Animate.to(green, {x: 50, y: 400, rotation: 2 * Math.PI}, 2500,
 // blue triangle spins forever
 animates[1] = new Animate.to(blue, {rotation: -2 * Math.PI}, 1000, {continue: true});
 
-// circle changes from blue to red and reverse and repeats
+// circle changes = require(blue to red and reverse and repeats
 animates[2] = new Animate.tint(shaker, 0xff0000, 2000, {repeat: true, reverse: true});
 
 // circle shakes forever, it starts after 1 second (also testing array of objects)
