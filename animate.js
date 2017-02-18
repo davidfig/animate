@@ -16,6 +16,7 @@
 
 // current list of animations
 const list = [];
+let _defaults = {};
 
 // hold debug panel for count (if available)
 let Debug;
@@ -28,6 +29,8 @@ let count;
  * @param {boolean} [options.debug] include debug in percent panel when calling update
  * @param {boolean|object} [options.count] include the animations running count in debug panel {@link https://github.com/davidfig/debug}; can also provide an object with styling for the panel
  * @param {Debug} [options.Debug] use this instantiation of yy-debug for options.count {@link https://github.com/davidfig/debug}
+ * @param {Renderer} [options.renderer] default renderer for all animations
+ * @param {function|string} [options.ease] default easing function for all animations
  */
 
 function init(options)
@@ -40,11 +43,23 @@ function init(options)
     }
     if (options.count)
     {
-        Debug = options.Debug || require('yy-debug');
+        Debug = options.debug || require('yy-debug');
         const opts = (typeof options.count === 'object') ? options.count : {};
         opts.text = '0 animations';
-        count = Debug.add('AnimateCount', opts)
+        count = Debug.add('AnimateCount', opts);
     }
+    defaults(options);
+}
+
+/*
+ * Change global defaults
+ * @param {Renderer} [options.renderer] default renderer for all animations
+ * @param {function|string} [options.ease] default easing function for all animations
+ */
+function defaults(options)
+{
+    _defaults.renderer = options.renderer || _defaults.renderer;
+    _defaults.ease = options.ease || _defaults.ease;
 }
 
 /**
@@ -115,6 +130,10 @@ module.exports = {
     update,
     remove,
     add,
+    get defaults()
+    {
+        return _defaults;
+    },
     wait: require('./src/wait'),
     to: require('./src/to'),
     shake: require('./src/shake'),

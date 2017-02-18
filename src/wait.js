@@ -32,6 +32,7 @@ class wait
      */
     constructor(object, options)
     {
+        const Animate = require('../animate');
         this.object = object;
         this.options = options || {};
         this.type = 'Wait';
@@ -43,11 +44,19 @@ class wait
         {
             this.time = 0;
         }
+        if (!options.ease && Animate.defaults.ease)
+        {
+            options.ease = Animate.defaults.ease;
+        }
         if (options.ease && typeof options.ease === 'string')
         {
             options.ease = Easing[options.ease] || this.linear;
         }
-        require('../animate').add(this);
+        if (!options.renderer && Animate.defaults.renderer)
+        {
+            options.renderer = Animate.defaults.renderer;
+        }
+        Animate.add(this);
     }
 
     save()
@@ -187,7 +196,7 @@ class wait
         }
     }
 
-    update(elapsed)
+    update(elapsed, defaults)
     {
         if (!this.options)
         {
