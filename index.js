@@ -8,13 +8,13 @@ const Animate = require('../animate/animate');
 Debug.init();
 Update.init({debug: Debug, FPS: true, percent: true});
 
-// intialize update loop for Animate with optional debug info
-Animate.init({update: Update, debug: Debug, Debug: Debug, count: true});
-
 // set up pixi and shapes
 let renderer, red, green, blue, shaker, pacman;
 const theDots = [], animates = [];
 pixi();
+
+// intialize update loop for Animate with optional debug info
+Animate.init({update: Update, debug: Debug, Debug: Debug, count: true, ease: 'easeInOutSine', renderer: renderer});
 
 // red triangle fades, moves, and scales; repeats and reverses forever
 animates[0] = new Animate.to(red, {alpha: 0.1, x: 500, y: 500, scale: {x: 5, y: 5}}, 1000,
@@ -112,7 +112,7 @@ Update.update();
 
 function pixi()
 {
-    renderer = new Renderer({update: Update, debug: Debug, transparent: true, alwaysRender: true, styles: {resize: true, background: green, pointerEvents: 'none'}});
+    renderer = new Renderer({update: Update, debug: Debug, transparent: true, styles: {resize: true, background: green, pointerEvents: 'none'}});
     red = triangle(100, 0xff0000);
     red.position.set(50, 50);
     green = triangle(50, 0x00ff00);
