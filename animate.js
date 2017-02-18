@@ -48,7 +48,7 @@ function init(options)
         opts.text = '0 animations';
         count = Debug.add('AnimateCount', opts);
     }
-    defaults(options);
+    setDefaults(options);
 }
 
 /*
@@ -56,7 +56,7 @@ function init(options)
  * @param {Renderer} [options.renderer] default renderer for all animations
  * @param {function|string} [options.ease] default easing function for all animations
  */
-function defaults(options)
+function setDefaults(options)
 {
     _defaults.renderer = options.renderer || _defaults.renderer;
     _defaults.ease = options.ease || _defaults.ease;
@@ -134,6 +134,7 @@ module.exports = {
     {
         return _defaults;
     },
+    setDefaults,
     wait: require('./src/wait'),
     to: require('./src/to'),
     shake: require('./src/shake'),
