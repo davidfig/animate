@@ -265,7 +265,7 @@ class wait
         {
             this.options.renderer.dirty = true;
         }
-        if (this.duration !== 0 && this.time === this.duration)
+        if (this.type === 'Wait' || (this.duration !== 0 && this.time === this.duration))
         {
             return this.end(leftOver);
         }
@@ -280,8 +280,8 @@ class wait
     {
         switch (key)
         {
-        case 'opacity':
-            return (isNaN(value)) ? 1 : value;
+            case 'opacity':
+                return (isNaN(value)) ? 1 : value;
         }
         return value;
     }
