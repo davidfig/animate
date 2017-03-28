@@ -20,6 +20,7 @@ class wait
      * @param {(boolean|number)} [options.reverse] true: reverse animation (if combined with repeat, then pulse); n: reverse animation n times
      * @param {(boolean|number)} [options.continue] true: continue animation with new starting values; n: continue animation n times
      * @param {number} [options.id] user-generated id (e.g., I use it to properly load animations when an object has multiple animations running)
+     * @param {boolean} [options.orphan] delete animation if .parent of object (or first object in list) is null
      * @param {Function} [options.load] loads an animation using an .save() object; note the * parameters below cannot be loaded and must be re-set
      * @param {Function|string} [options.ease] function (or penner function name) from easing.js (see http://easings.net for examples)*
      * @param {Renderer} [options.renderer] sets Renderer.dirty for each loop*
@@ -196,7 +197,7 @@ class wait
         }
     }
 
-    update(elapsed, defaults)
+    update(elapsed)
     {
         if (!this.options)
         {
@@ -209,6 +210,20 @@ class wait
                 this.options.onCancel(this.list || this.object);
             }
             return true;
+        }
+        if (this.options.orphan)
+        {
+            if (this.list)
+            {
+                if (!this.list[0].parent)
+                {
+                    return true;
+                }
+            }
+            else if (!this.object.parent)
+            {
+                return true;
+            }
         }
         if (this.options.restart)
         {
