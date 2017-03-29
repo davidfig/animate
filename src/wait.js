@@ -274,7 +274,7 @@ class wait
         var allDone = this.calculate(elapsed);
         if (this.options.onEach)
         {
-            this.options.onEach(elapsed, this.list || this.object);
+            this.options.onEach(elapsed, this.list || this.object, this);
         }
         if (this.options.renderer)
         {
