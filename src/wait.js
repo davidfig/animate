@@ -271,7 +271,7 @@ class wait
             leftOver = this.time - this.duration;
             this.time = this.duration;
         }
-        var allDone = this.calculate(elapsed);
+        const allDone = this.calculate(elapsed);
         if (this.options.onEach)
         {
             this.options.onEach(elapsed, this.list || this.object, this);

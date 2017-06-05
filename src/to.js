@@ -205,7 +205,7 @@ class to extends wait
                 for (let j = 0, _j = key.children.length; j < _j; j++)
                 {
                     const key2 = key.children[j];
-                    const others = object[key1][key2] = ease(time, start[i][j], delta[i][j], duration);
+                    const others = object[key1][key2] = (time >= duration) ? start[i][j] + delta[i][j] : ease(time, start[i][j], delta[i][j], duration);
                     if (list)
                     {
                         for (let k = 1, _k = list.length; k < _k; k++)
@@ -218,7 +218,7 @@ class to extends wait
             else
             {
                 const key = keys[i];
-                const others = object[key] = ease(time, start[i], delta[i], duration);
+                const others = object[key] = (time >= duration) ? start[i] + delta[i] : ease(time, start[i], delta[i], duration);
                 if (list)
                 {
                     for (let j = 1, _j = this.list.length; j < _j; j++)
